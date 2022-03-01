@@ -35,7 +35,8 @@ configure_file(${PROJECT_SOURCE_DIR}/wrapper/pybind_wrapper.tpl.example
 
 # Define the list of interface files.
 set(interface_list ${PROJECT_SOURCE_DIR}/${PROJECT_NAME}.i
-                   ${PROJECT_SOURCE_DIR}/cpp/sub_dir/sub_dir.i)
+                   ${PROJECT_SOURCE_DIR}/cpp/sub_dir/sub_dir.i
+                   ${PROJECT_SOURCE_DIR}/cpp/planning/planning.i)
 
 # Copy over C++ headers to use for wrapping
 foreach(interface ${interface_list})
