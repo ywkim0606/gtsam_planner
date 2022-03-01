@@ -33,5 +33,6 @@
         "tuple": "c",
         "type_traits": "c",
         "typeinfo": "c"
-    }
+    },
+    "python.pythonPath": "/home/yoonwoo/anaconda3/bin/python"
 }
