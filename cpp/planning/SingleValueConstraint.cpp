@@ -11,10 +11,11 @@
 
 #include <boost/make_shared.hpp>
 using namespace gtsam;
+using namespace std;
 
 namespace gtsam_example {
 
-using namespace std;
+
 
 /* ************************************************************************* */
 void SingleValueConstraint::print(const string& s, const KeyFormatter& formatter) const {
