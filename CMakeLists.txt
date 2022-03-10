@@ -26,7 +26,8 @@ include_directories(BEFORE "${PROJECT_SOURCE_DIR}")
 #   where we load all the source files and link against the GTSAM library.
 add_library(${PROJECT_NAME} SHARED cpp/greeting.h cpp/greeting.cpp
                                    cpp/sub_dir/curse.h cpp/sub_dir/curse.cpp
-                                   cpp/planning/SingleValueConstraint.h cpp/planning/SingleValueConstraint.cpp)
+                                   cpp/planning/SingleValueConstraint.h cpp/planning/SingleValueConstraint.cpp
+                                   cpp/planning/MultiValueConstraint.h cpp/planning/MultiValueConstraint.cpp)
 target_link_libraries(${PROJECT_NAME} gtsam)
 
 # ##############################################################################

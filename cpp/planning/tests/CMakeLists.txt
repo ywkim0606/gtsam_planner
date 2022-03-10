@@ -1,1 +1,1 @@
-gtsamAddTestsGlob(discrete_unstable "test*.cpp" "" "gtsam_unstable")
+gtsamAddTestsGlob(discrete_unstable "test*.cpp" "" "cpp")

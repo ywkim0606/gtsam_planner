@@ -14,7 +14,6 @@
 #include <boost/assign.hpp>
 #include <boost/format.hpp>
 
-using namespace std;
 using namespace gtsam;
 namespace gtsam_example {
 
@@ -23,8 +22,9 @@ namespace gtsam_example {
  * This could of course also be implemented by changing its `Domain`.
  */
 class MutexConstraint : public DiscreteFactor {
+  std::vector<size_t> values_;        ///<  allowed values
+
   std::map<Key, size_t> cardinalities_;
-  vector<size_t> values_;
 
   DiscreteKey discreteKey(size_t i) const {
     Key j = keys_[i];
@@ -33,8 +33,9 @@ class MutexConstraint : public DiscreteFactor {
 
  public:
 
-  /// Construct from DiscreteKey and given value.
-  MutexConstraint(const DiscreteKeys& dkeys, const vector<size_t> values);
+  /// Construct from keys, and tentative values.
+  MutexConstraint(const DiscreteKeys& dkeys,
+                        const std::vector<size_t>& values);
 
   // print
   void print(const std::string& s = "", const KeyFormatter& formatter =
@@ -47,9 +48,9 @@ class MutexConstraint : public DiscreteFactor {
     else {
       const MutexConstraint& f(static_cast<const MutexConstraint&>(other));
       return cardinalities_.size() == f.cardinalities_.size() &&
-             std::equal(cardinalities_.begin(), cardinalities_.end(),
+              std::equal(cardinalities_.begin(), cardinalities_.end(),
                         f.cardinalities_.begin()) &&
-              std::equal(values_.begin(), values_.end(), f.values_.begin());
+              std::equal (values_.begin(), values_.end(), f.values_.begin());
     }
   }
 
