@@ -1,8 +1,8 @@
 /*
- * MutexConstraint.h
+ * SingleValue.h
  * @brief domain constraint
  * @date Feb 6, 2012
- * @author Yoonwoo Kim
+ * @author Frank Dellaert
  */
 
 #pragma once
@@ -14,18 +14,16 @@
 #include <boost/assign.hpp>
 #include <boost/format.hpp>
 
-using namespace std;
 using namespace gtsam;
 namespace gtsam_example {
 
 /**
- * Operator constraint: choose an operator = factors_[values].
+ * SingleValue constraint: ensures a variable takes on a certain value.
+ * This could of course also be implemented by changing its `Domain`.
  */
-class OperatorConstraint : public DiscreteFactor {
-  std::map<Key, size_t> cardinalities_t_;
-  DiscreteKey discreteKey(size_t i) const
+class NotSingleValueConstraint : public DiscreteFactor {
   size_t cardinality_;  /// < Number of values
-  vector<DecisionTreeFactor> factors_;  /// < all possible operators
+  size_t value_;        ///<  allowed value
 
   DiscreteKey discreteKey() const {
     return DiscreteKey(keys_[0], cardinality_);
@@ -33,8 +31,15 @@ class OperatorConstraint : public DiscreteFactor {
 
  public:
 
+  /// Construct from key, cardinality, and given value.
+  NotSingleValueConstraint(Key key, size_t n, size_t value)
+      : DiscreteFactor(boost::assign::cref_list_of<1>(key)),
+        cardinality_(n), value_(value) {}
+
   /// Construct from DiscreteKey and given value.
-  OperatorConstraint(const DiscreteKey& dkey, const vector<DecisionTreeFactor> factors);
+  NotSingleValueConstraint(const DiscreteKey& dkey, size_t value)
+      : DiscreteFactor(boost::assign::cref_list_of<1>(dkey.first)),
+        cardinality_(dkey.second), value_(value) {}
 
   // print
   void print(const std::string& s = "", const KeyFormatter& formatter =
@@ -42,25 +47,22 @@ class OperatorConstraint : public DiscreteFactor {
 
   /// equals
   bool equals(const DiscreteFactor& other, double tol) const override {
-    if (!dynamic_cast<const OperatorConstraint*>(&other))
+    if (!dynamic_cast<const NotSingleValueConstraint*>(&other))
       return false;
     else {
-      const OperatorConstraint& f(static_cast<const OperatorConstraint&>(other));
-      return (cardinality_ == f.cardinality_) &&
-              std::equal(factors_.begin(), factors_.end(), f.factors_.begin());
-              // std::equal(values_.begin(), values_.end(), f.values_.begin()) &&
-              // std::equal(factors_.begin(), factors_.end(), f.factors_.begin());
+      const NotSingleValueConstraint& f(static_cast<const NotSingleValueConstraint&>(other));
+      return (cardinality_ == f.cardinality_) && (value_ == f.value_);
     }
   }
 
   /// Calculate value
   double operator()(const DiscreteValues& values) const override;
 
-  // /// Convert into a decisiontree
-  // DecisionTreeFactor toDecisionTreeFactor() const override;
+  /// Convert into a decisiontree
+  DecisionTreeFactor toDecisionTreeFactor() const override;
 
-  // /// Multiply into a decisiontree
-  // DecisionTreeFactor operator*(const DecisionTreeFactor& f) const override;  
+  /// Multiply into a decisiontree
+  DecisionTreeFactor operator*(const DecisionTreeFactor& f) const override;  
 
     /// Render as markdown table.
   std::string markdown(const KeyFormatter& keyFormatter = DefaultKeyFormatter,

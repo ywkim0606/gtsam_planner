@@ -27,7 +27,9 @@ include_directories(BEFORE "${PROJECT_SOURCE_DIR}")
 add_library(${PROJECT_NAME} SHARED cpp/greeting.h cpp/greeting.cpp
                                    cpp/sub_dir/curse.h cpp/sub_dir/curse.cpp
                                    cpp/planning/SingleValueConstraint.h cpp/planning/SingleValueConstraint.cpp
-                                   cpp/planning/MultiValueConstraint.h cpp/planning/MultiValueConstraint.cpp)
+                                   cpp/planning/MultiValueConstraint.h cpp/planning/MultiValueConstraint.cpp
+                                   cpp/planning/NotSingleValueConstraint.h cpp/planning/NotSingleValueConstraint.cpp
+                                   cpp/planning/OrConstraint.h cpp/planning/OrConstraint.cpp)
 target_link_libraries(${PROJECT_NAME} gtsam)
 
 # ##############################################################################

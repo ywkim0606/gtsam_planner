@@ -62,7 +62,7 @@ class SingleValueConstraint : public DiscreteFactor {
   DecisionTreeFactor toDecisionTreeFactor() const override;
 
   /// Multiply into a decisiontree
-  DecisionTreeFactor operator*(const DecisionTreeFactor& f) const override;  
+  DecisionTreeFactor operator*(const DecisionTreeFactor& f) const override;
 
     /// Render as markdown table.
   std::string markdown(const KeyFormatter& keyFormatter = DefaultKeyFormatter,

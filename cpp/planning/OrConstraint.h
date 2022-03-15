@@ -14,28 +14,22 @@
 #include <boost/assign.hpp>
 #include <boost/format.hpp>
 
+using namespace std;
 using namespace gtsam;
 namespace gtsam_example {
 
 /**
- * SingleValue constraint: ensures a variable takes on a certain value.
- * This could of course also be implemented by changing its `Domain`.
+ * Operator constraint: choose an operator = factors_[values].
  */
-class MutexConstraint : public DiscreteFactor {
-  std::vector<size_t> values_;        ///<  allowed values
-
+class OrConstraint : public DiscreteFactor {
+  vector<DecisionTreeFactor> factors_;  /// < all possible operators
+  DiscreteKeys dkeys_;
   std::map<Key, size_t> cardinalities_;
-
-  DiscreteKey discreteKey(size_t i) const {
-    Key j = keys_[i];
-    return DiscreteKey(j, cardinalities_.at(j));
-  }
 
  public:
 
-  /// Construct from keys, and tentative values.
-  MutexConstraint(const DiscreteKeys& dkeys,
-                        const std::vector<size_t>& values);
+  /// Construct from factors.
+  OrConstraint(const vector<DecisionTreeFactor>& factors);
 
   // print
   void print(const std::string& s = "", const KeyFormatter& formatter =
@@ -43,14 +37,13 @@ class MutexConstraint : public DiscreteFactor {
 
   /// equals
   bool equals(const DiscreteFactor& other, double tol) const override {
-    if (!dynamic_cast<const MutexConstraint*>(&other))
+    if (!dynamic_cast<const OrConstraint*>(&other))
       return false;
     else {
-      const MutexConstraint& f(static_cast<const MutexConstraint&>(other));
+      const OrConstraint& f(static_cast<const OrConstraint&>(other));
       return cardinalities_.size() == f.cardinalities_.size() &&
               std::equal(cardinalities_.begin(), cardinalities_.end(),
-                        f.cardinalities_.begin()) &&
-              std::equal (values_.begin(), values_.end(), f.values_.begin());
+                        f.cardinalities_.begin());
     }
   }
 
