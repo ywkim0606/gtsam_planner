@@ -45,15 +45,13 @@ double OrConstraint::operator()(const DiscreteValues& values) const {
 }
 
 /* ************************************************************************* */
-// double validate() {
-  
-// }
 DecisionTreeFactor OrConstraint::toDecisionTreeFactor() const {
   vector<double> table;
   const auto assignments = DiscreteValues::CartesianProduct(dkeys_);
   for (const DiscreteValues assignment : assignments) {
     size_t is_true = 0;
     for (DecisionTreeFactor factor : factors_) {
+      if (factor(assignment) == 1.0) 
       is_true += factor(assignment);
     }
     table.push_back(is_true > 0);

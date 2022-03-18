@@ -20,9 +20,12 @@ from gtsam.utils.test_case import GtsamTestCase
 
 
 class TestOrConstraint(GtsamTestCase):
-    """Tests for Single Value Constraints"""
+    """Tests for Or Constraints"""
 
     def setUp(self):
+        """
+        Create DiscreteKeys, DecisionTreeFactor for AND and OR, and or them together
+        """
         self.keys = DiscreteKeys()
         key_list = [(0, 2), (1, 2), (2, 2)]
         for key in reversed(key_list):
@@ -32,6 +35,10 @@ class TestOrConstraint(GtsamTestCase):
         self.constraint = OrConstraint([f_and, f_or])
 
     def test_operator(self):
+        """
+        tests if key(0) = 1, key(1) = 0, and key(2) = 1 gives 1
+        for AND or OR constraint
+        """
         values = DiscreteValues()
         values[self.keys.at(0)[0]] = 1
         values[self.keys.at(1)[0]] = 0
@@ -39,6 +46,9 @@ class TestOrConstraint(GtsamTestCase):
         self.assertEqual(self.constraint(values), 1.0)
     
     def test_toDecisionTree(self):
+        """
+        Check conversion to decision tree factor, checked manually
+        """
         expected = self.constraint.toDecisionTreeFactor()
         self.assertIsInstance(expected, DecisionTreeFactor)
         self.gtsamAssertEquals(DecisionTreeFactor(self.keys, "0 0 1 1 1 1 1 1"), expected)

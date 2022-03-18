@@ -53,4 +53,29 @@ virtual class OrConstraint : gtsam::DiscreteFactor {
   gtsam::DecisionTreeFactor toDecisionTreeFactor() const;
 };
 
+#include <cpp/planning/MutexConstraint.h>
+virtual class MutexConstraint : gtsam::DiscreteFactor {
+  MutexConstraint(const gtsam::DiscreteKeys& dkey, const std::vector<size_t>& values);
+  
+  void print(const string s="",
+          const gtsam::KeyFormatter& formatter = 
+            gtsam::DefaultKeyFormatter) const;
+  bool equals(const gtsam::DiscreteFactor& other, double tol) const;
+  double operator()(const gtsam::DiscreteValues& values) const;
+  gtsam::DecisionTreeFactor toDecisionTreeFactor() const;
+};
+
+#include <cpp/planning/OperatorConstraint.h>
+virtual class OperatorConstraint : gtsam::DiscreteFactor {
+  OperatorConstraint(const gtsam::DiscreteKey& dkey, const std::vector<gtsam::DecisionTreeFactor>& factors);
+  
+  void print(const string s="",
+          const gtsam::KeyFormatter& formatter = 
+            gtsam::DefaultKeyFormatter) const;
+  bool equals(const gtsam::DiscreteFactor& other, double tol) const;
+  double operator()(const gtsam::DiscreteValues& values) const;
+  gtsam::DecisionTreeFactor toDecisionTreeFactor() const;
+};
+
+
 }
