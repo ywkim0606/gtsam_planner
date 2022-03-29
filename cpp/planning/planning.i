@@ -67,7 +67,8 @@ virtual class MutexConstraint : gtsam::DiscreteFactor {
 
 #include <cpp/planning/OperatorConstraint.h>
 virtual class OperatorConstraint : gtsam::DiscreteFactor {
-  OperatorConstraint(const gtsam::DiscreteKeys& dkeys, const std::vector<gtsam_planner::MultiValueConstraint>& factors);
+  OperatorConstraint(const gtsam::DiscreteKeys& dkeys,
+    const std::vector<gtsam_planner::MultiValueConstraint>& factors, std::size_t which_op);
   
   void print(const string s="",
           const gtsam::KeyFormatter& formatter = 
