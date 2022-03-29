@@ -1,8 +1,8 @@
 /*
- * SingleValue.h
+ * MutexConstraint.h
  * @brief domain constraint
  * @date Feb 6, 2012
- * @author Frank Dellaert
+ * @author Yoonwoo Kim
  */
 
 #pragma once
@@ -10,36 +10,28 @@
 #include <gtsam/discrete/DiscreteFactor.h>
 #include <gtsam/discrete/DiscreteValues.h>
 #include <gtsam/discrete/DiscreteKey.h>
+#include <cpp/planning/MultiValueConstraint.h>
 
 #include <boost/assign.hpp>
 #include <boost/format.hpp>
 
+using namespace std;
 using namespace gtsam;
 namespace gtsam_planner {
 
 /**
- * SingleValue constraint: ensures a variable takes on a certain value.
- * This could of course also be implemented by changing its `Domain`.
+ * Operator constraint: choose an operator = factors_[values].
  */
-class NotSingleValueConstraint : public DiscreteFactor {
-  size_t cardinality_;  /// < Number of values
-  size_t value_;        ///<  allowed value
-
-  DiscreteKey discreteKey() const {
-    return DiscreteKey(keys_[0], cardinality_);
-  }
+class NullOperatorConstraint : public DiscreteFactor {
+  map<Key, size_t> cardinalities_;
+  DiscreteKeys dkeys_;
+  DiscreteKeys dkeys_t_;
+  DiscreteKeys dkeys_tp_;
 
  public:
 
-  /// Construct from key, cardinality, and given value.
-  NotSingleValueConstraint(Key key, size_t n, size_t value)
-      : DiscreteFactor(boost::assign::cref_list_of<1>(key)),
-        cardinality_(n), value_(value) {}
-
-  /// Construct from DiscreteKey and given value.
-  NotSingleValueConstraint(const DiscreteKey& dkey, size_t value)
-      : DiscreteFactor(boost::assign::cref_list_of<1>(dkey.first)),
-        cardinality_(dkey.second), value_(value) {}
+  /// Construct from factors.
+  NullOperatorConstraint(const DiscreteKeys& dkeys);
 
   // print
   void print(const std::string& s = "", const KeyFormatter& formatter =
@@ -47,11 +39,13 @@ class NotSingleValueConstraint : public DiscreteFactor {
 
   /// equals
   bool equals(const DiscreteFactor& other, double tol) const override {
-    if (!dynamic_cast<const NotSingleValueConstraint*>(&other))
+    if (!dynamic_cast<const NullOperatorConstraint*>(&other))
       return false;
     else {
-      const NotSingleValueConstraint& f(static_cast<const NotSingleValueConstraint&>(other));
-      return (cardinality_ == f.cardinality_) && (value_ == f.value_);
+      const NullOperatorConstraint& f(static_cast<const NullOperatorConstraint&>(other));
+      return cardinalities_.size() == f.cardinalities_.size() &&
+              std::equal(cardinalities_.begin(), cardinalities_.end(),
+                          f.cardinalities_.begin());
     }
   }
 

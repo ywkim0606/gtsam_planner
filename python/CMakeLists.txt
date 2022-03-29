@@ -25,17 +25,16 @@ configure_file(${PROJECT_SOURCE_DIR}/wrapper/setup.py.in
                ${PROJECT_PY_MODULE_PATH}/setup.py)
 
 # Copy over the __init__.py file. This is now
-# `python/gtsam_example/__init__.py`.
+# `python/gtsam_planner/__init__.py`.
 configure_file(${PROJECT_SOURCE_DIR}/wrapper/__init__.py.in
                ${PROJECT_PY_MODULE_PATH}/${PROJECT_NAME}/__init__.py)
 
-# Copy over the pybind .tpl file. This is now `build/gtsam_example.tpl`.
+# Copy over the pybind .tpl file. This is now `build/gtsam_planner.tpl`.
 configure_file(${PROJECT_SOURCE_DIR}/wrapper/pybind_wrapper.tpl.example
                ${PROJECT_PY_MODULE_PATH}/${PROJECT_NAME}.tpl)
 
 # Define the list of interface files.
 set(interface_list ${PROJECT_SOURCE_DIR}/${PROJECT_NAME}.i
-                   ${PROJECT_SOURCE_DIR}/cpp/sub_dir/sub_dir.i
                    ${PROJECT_SOURCE_DIR}/cpp/planning/planning.i)
 
 # Copy over C++ headers to use for wrapping
@@ -71,11 +70,11 @@ set(ignore "")
 # This is the main function that generates the cpp file which Pybind11 will use.
 pybind_wrap(
   ${PROJECT_NAME}_py # target
-  "${interface_list}" # interface header files (gtsam_example.i in the root
+  "${interface_list}" # interface header files (gtsam_planner.i in the root
                       # directory)
-  "${PROJECT_NAME}.cpp" # the generated cpp (gtsam_example.cpp)
-  "${PROJECT_NAME}" # module_name (gtsam_example)
-  "${PROJECT_NAME}" # top namespace in the cpp file (gtsam_example)
+  "${PROJECT_NAME}.cpp" # the generated cpp (gtsam_planner.cpp)
+  "${PROJECT_NAME}" # module_name (gtsam_planner)
+  "${PROJECT_NAME}" # top namespace in the cpp file (gtsam_planner)
   "${ignore}" # ignore classes
   ${PROJECT_PY_MODULE_PATH}/${PROJECT_NAME}.tpl
   ${PROJECT_NAME} # libs
@@ -85,7 +84,7 @@ pybind_wrap(
 )
 
 # We define where we wish to save the wrapped .so file once we run `make`. It
-# will be stored in `build/gtsam_example/gtsam_example` to conform to standard
+# will be stored in `build/gtsam_planner/gtsam_planner` to conform to standard
 # python module structure.
 set_target_properties(
   ${PROJECT_NAME}_py

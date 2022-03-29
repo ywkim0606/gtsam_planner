@@ -10,29 +10,28 @@
 #include <gtsam/discrete/DiscreteFactor.h>
 #include <gtsam/discrete/DiscreteValues.h>
 #include <gtsam/discrete/DiscreteKey.h>
+#include <cpp/planning/MultiValueConstraint.h>
 
 #include <boost/assign.hpp>
 #include <boost/format.hpp>
 
 using namespace std;
 using namespace gtsam;
-namespace gtsam_example {
+namespace gtsam_planner {
 
 /**
  * Operator constraint: choose an operator = factors_[values].
  */
 class OperatorConstraint : public DiscreteFactor {
-  vector<DecisionTreeFactor> factors_;  /// < all possible operators
+  vector<MultiValueConstraint> factors_;  /// < all possible operators
+  DiscreteKeys dkeys_;
   DiscreteKey dkey_;
   size_t cardinality_;  /// < Number of values
-  // DiscreteKey discreteKey() const {
-  //   return DiscreteKey(keys_[0], cardinality_);
-  // }
 
  public:
 
   /// Construct from factors.
-  OperatorConstraint(const DiscreteKey& dkey, const vector<DecisionTreeFactor>& factors);
+  OperatorConstraint(const DiscreteKeys& dkeys, const vector<MultiValueConstraint>& factors);
 
   // print
   void print(const std::string& s = "", const KeyFormatter& formatter =
@@ -44,9 +43,13 @@ class OperatorConstraint : public DiscreteFactor {
       return false;
     else {
       const OperatorConstraint& f(static_cast<const OperatorConstraint&>(other));
-      return (cardinality_ == f.cardinality_) &&
-              std::equal(factors_.begin(), factors_.end(),
-                        f.factors_.begin());
+      if (cardinality_ == f.cardinality_) {
+        for (size_t i = 0; i < factors_.size(); i++) {
+          if (factors_[i].equals(f.factors_[i], 1e-9) == false) return false;
+        }
+        return true;
+      }
+      return false;
     }
   }
 
@@ -73,4 +76,4 @@ class OperatorConstraint : public DiscreteFactor {
 
 };
 
-}  // namespace gtsam_example
+}  // namespace gtsam_planner

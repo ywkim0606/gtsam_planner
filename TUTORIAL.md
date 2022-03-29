@@ -141,10 +141,10 @@ An illustrative example is provided in the `src` directory of this repository.
 
     ```cmake
     pybind_wrap(${PROJECT_NAME}_py # target
-            ${PROJECT_SOURCE_DIR}/${PROJECT_NAME}.h # interface header file (gtsam_example.h in the root directory)
-            "${PROJECT_NAME}.cpp" # the generated cpp (gtsam_example.cpp)
-            "${PROJECT_NAME}" # module_name (gtsam_example)
-            "${PROJECT_NAME}" # top namespace in the cpp file (gtsam_example)
+            ${PROJECT_SOURCE_DIR}/${PROJECT_NAME}.h # interface header file (gtsam_planner.h in the root directory)
+            "${PROJECT_NAME}.cpp" # the generated cpp (gtsam_planner.cpp)
+            "${PROJECT_NAME}" # module_name (gtsam_planner)
+            "${PROJECT_NAME}" # top namespace in the cpp file (gtsam_planner)
             "" # ignore classes
             ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.tpl
             ${PROJECT_NAME} # libs
@@ -168,13 +168,13 @@ An illustrative example is provided in the `src` directory of this repository.
     ```cmake
     add_custom_target(python-install
         COMMAND ${PYTHON_EXECUTABLE} ${GTSAM_MODULE_PATH}/setup.py install
-        DEPENDS gtsam_example_py
+        DEPENDS gtsam_planner_py
         WORKING_DIRECTORY ${GTSAM_MODULE_PATH})
     ```
 
 # Compiling
 
-To compile and wrap the code, the familiar CMake process is followed. Starting from the top-level root directory where the `gtsam_example.h` file is located, we create a build directory and run `cmake` and `make`.
+To compile and wrap the code, the familiar CMake process is followed. Starting from the top-level root directory where the `gtsam_planner.h` file is located, we create a build directory and run `cmake` and `make`.
 
 ```sh
 mkdir build && cd build

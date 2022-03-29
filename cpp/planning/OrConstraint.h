@@ -16,7 +16,7 @@
 
 using namespace std;
 using namespace gtsam;
-namespace gtsam_example {
+namespace gtsam_planner {
 
 /**
  * Operator constraint: choose an operator = factors_[values].
@@ -70,4 +70,4 @@ class OrConstraint : public DiscreteFactor {
 
 };
 
-}  // namespace gtsam_example
+}  // namespace gtsam_planner

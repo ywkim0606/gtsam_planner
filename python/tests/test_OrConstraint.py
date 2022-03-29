@@ -14,8 +14,8 @@ import numpy as np
 
 import gtsam
 from gtsam import DecisionTreeFactor, DiscreteValues, DiscreteKeys
-import gtsam_example
-from gtsam_example import OrConstraint
+import gtsam_planner
+from gtsam_planner import OrConstraint
 from gtsam.utils.test_case import GtsamTestCase
 
 

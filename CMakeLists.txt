@@ -2,10 +2,10 @@
 # wrapping using the CMake tools
 
 # ##############################################################################
-# * 1. To create your own project, replace "gtsam_example" with the actual name
+# * 1. To create your own project, replace "gtsam_planner" with the actual name
 #   of your project
 cmake_minimum_required(VERSION 3.9)
-project(gtsam_example CXX C)
+project(gtsam_planner CXX C)
 set(CXX_STANDARD 11)
 
 # ##############################################################################
@@ -24,14 +24,14 @@ include_directories(BEFORE "${PROJECT_SOURCE_DIR}")
 # ##############################################################################
 # * 4. Build static library from common sources. This is a common cmake step
 #   where we load all the source files and link against the GTSAM library.
-add_library(${PROJECT_NAME} SHARED cpp/greeting.h cpp/greeting.cpp
-                                   cpp/sub_dir/curse.h cpp/sub_dir/curse.cpp
-                                   cpp/planning/SingleValueConstraint.h cpp/planning/SingleValueConstraint.cpp
+add_library(${PROJECT_NAME} SHARED cpp/planning/SingleValueConstraint.h cpp/planning/SingleValueConstraint.cpp
                                    cpp/planning/MultiValueConstraint.h cpp/planning/MultiValueConstraint.cpp
                                    cpp/planning/NotSingleValueConstraint.h cpp/planning/NotSingleValueConstraint.cpp
                                    cpp/planning/OrConstraint.h cpp/planning/OrConstraint.cpp
                                    cpp/planning/MutexConstraint.h cpp/planning/MutexConstraint.cpp
-                                   cpp/planning/OperatorConstraint.h cpp/planning/OperatorConstraint.cpp)
+                                   cpp/planning/OperatorConstraint.h cpp/planning/OperatorConstraint.cpp
+                                   cpp/planning/NullOperatorConstraint.h cpp/planning/NullOperatorConstraint.cpp
+                                   cpp/planning/BinarySameConstraint.h cpp/planning/BinarySameConstraint.cpp)
 target_link_libraries(${PROJECT_NAME} gtsam)
 
 # ##############################################################################

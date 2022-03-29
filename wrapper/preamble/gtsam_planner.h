@@ -7,9 +7,9 @@
   *   - foo(None)
   *   - foo(bar_instance)
 */
-#include <pybind11/stl.h>
+// #include <pybind11/stl.h>
 
-namespace pybind11 { namespace detail {
-    template <typename T>
-    struct type_caster<boost::optional<T>> : optional_caster<boost::optional<T>> {};
-}}
+// namespace pybind11 { namespace detail {
+//     template <typename T>
+//     struct type_caster<boost::optional<T>> : optional_caster<boost::optional<T>> {};
+// }}

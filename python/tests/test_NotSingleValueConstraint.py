@@ -14,8 +14,8 @@ import numpy as np
 
 import gtsam
 from gtsam import DecisionTreeFactor, DiscreteValues
-import gtsam_example
-from gtsam_example import NotSingleValueConstraint
+import gtsam_planner
+from gtsam_planner import NotSingleValueConstraint
 from gtsam.utils.test_case import GtsamTestCase
 
 

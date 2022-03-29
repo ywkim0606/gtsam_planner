@@ -15,7 +15,7 @@
 #include <boost/format.hpp>
 
 using namespace gtsam;
-namespace gtsam_example {
+namespace gtsam_planner {
 
 /**
  * SingleValue constraint: ensures a variable takes on a certain value.
@@ -77,4 +77,4 @@ class MutexConstraint : public DiscreteFactor {
 
 };
 
-}  // namespace gtsam_example
+}  // namespace gtsam_planner

@@ -49,7 +49,7 @@ setup(
     # Load the built shared object files
     package_data=package_data,
     include_package_data=True,
-    test_suite="gtsam_example.tests",
+    test_suite="gtsam_planner.tests",
     # Ensure that the compiled .so file is properly packaged
     zip_safe=False,
     platforms="any",

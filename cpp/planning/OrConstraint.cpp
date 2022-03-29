@@ -13,7 +13,7 @@
 using namespace gtsam;
 using namespace std;
 
-namespace gtsam_example {
+namespace gtsam_planner {
 
 /* ************************************************************************* */
 OrConstraint::OrConstraint(const vector<DecisionTreeFactor>& factors) 
@@ -67,4 +67,4 @@ DecisionTreeFactor OrConstraint::operator*(const DecisionTreeFactor& f) const {
   return toDecisionTreeFactor() * f;
 }
 
-}  // namespace gtsam_example
+}  // namespace gtsam_planner

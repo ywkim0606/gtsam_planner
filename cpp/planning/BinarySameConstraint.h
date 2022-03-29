@@ -5,8 +5,6 @@
  * @author Frank Dellaert
  */
 
-#pragma once
-
 #include <gtsam/discrete/DiscreteFactor.h>
 #include <gtsam/discrete/DiscreteValues.h>
 #include <gtsam/discrete/DiscreteKey.h>
@@ -21,25 +19,16 @@ namespace gtsam_planner {
  * SingleValue constraint: ensures a variable takes on a certain value.
  * This could of course also be implemented by changing its `Domain`.
  */
-class NotSingleValueConstraint : public DiscreteFactor {
-  size_t cardinality_;  /// < Number of values
-  size_t value_;        ///<  allowed value
-
-  DiscreteKey discreteKey() const {
-    return DiscreteKey(keys_[0], cardinality_);
-  }
+class BinarySameConstraint : public DiscreteFactor {
+  size_t cardinality0_, cardinality1_;
 
  public:
 
   /// Construct from key, cardinality, and given value.
-  NotSingleValueConstraint(Key key, size_t n, size_t value)
-      : DiscreteFactor(boost::assign::cref_list_of<1>(key)),
-        cardinality_(n), value_(value) {}
-
-  /// Construct from DiscreteKey and given value.
-  NotSingleValueConstraint(const DiscreteKey& dkey, size_t value)
-      : DiscreteFactor(boost::assign::cref_list_of<1>(dkey.first)),
-        cardinality_(dkey.second), value_(value) {}
+  BinarySameConstraint(const DiscreteKey& key1, const DiscreteKey& key2)
+      : DiscreteFactor(boost::assign::cref_list_of<2>(key1.first)(key2.first)),
+        cardinality0_(key1.second),
+        cardinality1_(key2.second) {}
 
   // print
   void print(const std::string& s = "", const KeyFormatter& formatter =
@@ -47,11 +36,12 @@ class NotSingleValueConstraint : public DiscreteFactor {
 
   /// equals
   bool equals(const DiscreteFactor& other, double tol) const override {
-    if (!dynamic_cast<const NotSingleValueConstraint*>(&other))
+    if (!dynamic_cast<const BinarySameConstraint*>(&other))
       return false;
     else {
-      const NotSingleValueConstraint& f(static_cast<const NotSingleValueConstraint&>(other));
-      return (cardinality_ == f.cardinality_) && (value_ == f.value_);
+      const BinarySameConstraint& f(static_cast<const BinarySameConstraint&>(other));
+      return (cardinality0_ == f.cardinality0_) &&
+             (cardinality1_ == f.cardinality1_);
     }
   }
 
@@ -62,7 +52,7 @@ class NotSingleValueConstraint : public DiscreteFactor {
   DecisionTreeFactor toDecisionTreeFactor() const override;
 
   /// Multiply into a decisiontree
-  DecisionTreeFactor operator*(const DecisionTreeFactor& f) const override;  
+  DecisionTreeFactor operator*(const DecisionTreeFactor& f) const override;
 
     /// Render as markdown table.
   std::string markdown(const KeyFormatter& keyFormatter = DefaultKeyFormatter,

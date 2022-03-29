@@ -16,7 +16,7 @@
 using namespace gtsam;
 using namespace std;
 
-namespace gtsam_example {
+namespace gtsam_planner {
 
 /* ************************************************************************* */
 MutexConstraint::MutexConstraint(const DiscreteKeys& dkeys,
@@ -56,7 +56,6 @@ DecisionTreeFactor MutexConstraint::toDecisionTreeFactor() const {
       singleTree = singleTree * notSingle.toDecisionTreeFactor();
     }
     factors.push_back(singleTree);
-    //TODO: 다 아닐때 1 주는것도 넣어야함
     DecisionTreeFactor allNotSingleTree;
     for (size_t k = 0; k < nrKeys; k++) {
       NotSingleValueConstraint allNotSingle(discreteKey(k), values_[k]);

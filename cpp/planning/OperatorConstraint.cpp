@@ -9,20 +9,22 @@
 #include <gtsam/discrete/DecisionTreeFactor.h>
 #include <cpp/planning/SingleValueConstraint.h>
 #include <cpp/planning/OperatorConstraint.h>
+#include <cpp/planning/NullOperatorConstraint.h>
 
 #include <boost/make_shared.hpp>
 using namespace gtsam;
 using namespace std;
 
-namespace gtsam_example {
+namespace gtsam_planner {
 
 /* ************************************************************************* */
-OperatorConstraint::OperatorConstraint(const DiscreteKey& dkey,
-  const vector<DecisionTreeFactor>& factors) 
-: DiscreteFactor(boost::assign::cref_list_of<1>(dkey.first)) {
-  for (const DecisionTreeFactor& factor: factors) factors_.push_back(factor);
-  dkey_ = dkey;
-  cardinality_ = dkey.second;
+OperatorConstraint::OperatorConstraint(const DiscreteKeys& dkeys,
+  const vector<MultiValueConstraint>& factors) 
+: DiscreteFactor(dkeys.indices()) {
+  for (const MultiValueConstraint& factor: factors) factors_.push_back(factor);
+  dkeys_ = dkeys;
+  dkey_ = dkeys.back();
+  cardinality_ = dkey_.second;
 }
 
 /* ************************************************************************* */
@@ -32,46 +34,50 @@ void OperatorConstraint::print(const string& s, const KeyFormatter& formatter) c
 }
 /* ************************************************************************* */
 double OperatorConstraint::operator()(const DiscreteValues& values) const {
-  for (const DecisionTreeFactor factor: factors_) {
-    if (factor(values) == 1.0) return 1.0;
-  }
-  return 0.0;
+  NullOperatorConstraint null(dkeys_);
+  return factors_[values.at(dkey_.first)](values) || null(values);
 }
 
+/* ************************************************************************* */
 double add_(const double& a, const double& b) {
     return a + b;
 }
 
-/* ************************************************************************* */
 DecisionTreeFactor OperatorConstraint::toDecisionTreeFactor() const {
-  // TODO: Add with singlevalue constraint
   vector<DecisionTreeFactor> multiplied_fs;
+  // null operator
+  // SingleValueConstraint s_const(dkey_, 0);
+  // NullOperatorConstraint null(dkeys_);
+  // DecisionTreeFactor null_tree = null.toDecisionTreeFactor();
+  // DecisionTreeFactor multiplied_null = s_const.toDecisionTreeFactor() * null_tree;
+  
+  // vector<double> null_table;
+  // for (size_t i=0; i < cardinality_; i++) {
+  //   if (i == 0) null_table.push_back(1.0);
+  //   else null_table.push_back(0.0);
+  // }
+  // DecisionTreeFactor null(dkey_, null_table);
+  // multiplied_fs.push_back(null);
+
+  // SingleValueConstraint s_const(dkey_, 0);
+  // DecisionTreeFactor multiplied = s_const.toDecisionTreeFactor();
+  // multiplied_fs.push_back(multiplied);
+
+  // operators
   for (size_t i=0; i < cardinality_; i++) {
-    SingleValueConstraint s_const = SingleValueConstraint(dkey_, i);
-    DecisionTreeFactor multiplied = s_const.toDecisionTreeFactor() * factors_[i];
+    SingleValueConstraint s_const(dkey_, i);
+    DecisionTreeFactor multiplied = s_const.toDecisionTreeFactor() * factors_[i].toDecisionTreeFactor();
     multiplied_fs.push_back(multiplied);
   }
-
-  DecisionTreeFactor added_f = multiplied_fs[0];
-  for (size_t i=1; i < multiplied_fs.size(); i++) {
-    added_f = added_f.apply(multiplied_fs[i], &add_);
-  }
-  return added_f;
-
-  // vector<double> table;
-  // const auto assignments = DiscreteValues::CartesianProduct(dkeys_);
-  // for (const DiscreteValues assignment : assignments) {
-  //   size_t is_true = 0;
-  //   for (DecisionTreeFactor factor : factors_) {
-  //     if (factor(assignment) == 1.0) 
-  //     is_true += factor(assignment);
-  //   }
-  //   table.push_back(is_true > 0);
-  // }
-  // DiscreteKeys rev_dkeys = {dkeys_.rbegin(), dkeys_.rend()};
-  // DecisionTreeFactor converted(rev_dkeys, table);
-  // return converted;
   
+  // combine into one huge tree
+  DecisionTreeFactor added_f;
+  vector<double> table;
+  for (size_t i=0; i < multiplied_fs.size(); i++) {
+    added_f = added_f.create();
+  }
+
+  return added_f;  
 }
 
 /* ************************************************************************* */
@@ -80,4 +86,4 @@ DecisionTreeFactor OperatorConstraint::operator*(const DecisionTreeFactor& f) co
   return toDecisionTreeFactor() * f;
 }
 
-}  // namespace gtsam_example
+}  // namespace gtsam_planner

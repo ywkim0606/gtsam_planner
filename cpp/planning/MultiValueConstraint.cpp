@@ -14,7 +14,7 @@
 using namespace gtsam;
 using namespace std;
 
-namespace gtsam_example {
+namespace gtsam_planner {
 
 /* ************************************************************************* */
 MultiValueConstraint::MultiValueConstraint(const DiscreteKeys& dkeys,
