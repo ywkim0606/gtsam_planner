@@ -22,16 +22,23 @@ namespace gtsam_planner {
 /**
  * Operator constraint: choose an operator = factors_[values].
  */
+// class OperatorConstraint : public DiscreteFactor {
+//   vector<MultiValueConstraint> factors_;  /// < all possible operators
+//   DiscreteKeys dkeys_;
+//   DiscreteKey dkey_;
+//   size_t cardinality_;  /// < Number of values
+//   size_t which_op_;
+
 class OperatorConstraint : public DiscreteFactor {
   vector<MultiValueConstraint> factors_;  /// < all possible operators
   DiscreteKeys dkeys_;
-  DiscreteKey dkey_;
-  size_t cardinality_;  /// < Number of values
+  size_t which_op_;
 
  public:
 
   /// Construct from factors.
-  OperatorConstraint(const DiscreteKeys& dkeys, const vector<MultiValueConstraint>& factors);
+  OperatorConstraint(const DiscreteKeys& dkeys, const vector<MultiValueConstraint>& factors,
+    size_t which_op);
 
   // print
   void print(const std::string& s = "", const KeyFormatter& formatter =
@@ -43,7 +50,7 @@ class OperatorConstraint : public DiscreteFactor {
       return false;
     else {
       const OperatorConstraint& f(static_cast<const OperatorConstraint&>(other));
-      if (cardinality_ == f.cardinality_) {
+      if (which_op_ == f.which_op_) {
         for (size_t i = 0; i < factors_.size(); i++) {
           if (factors_[i].equals(f.factors_[i], 1e-9) == false) return false;
         }

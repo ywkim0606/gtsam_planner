@@ -18,24 +18,35 @@ using namespace std;
 namespace gtsam_planner {
 
 /* ************************************************************************* */
+// OperatorConstraint::OperatorConstraint(const DiscreteKeys& dkeys,
+//   const vector<MultiValueConstraint>& factors, size_t which_op) 
+// : DiscreteFactor(dkeys.indices()) {
+//   for (const MultiValueConstraint& factor: factors) factors_.push_back(factor);
+//   dkeys_ = dkeys;
+//   dkey_ = dkeys.back();
+//   cardinality_ = dkey_.second;
+//   which_op_ = which_op;
+// }
+
 OperatorConstraint::OperatorConstraint(const DiscreteKeys& dkeys,
-  const vector<MultiValueConstraint>& factors) 
+  const vector<MultiValueConstraint>& factors, size_t which_op) 
 : DiscreteFactor(dkeys.indices()) {
   for (const MultiValueConstraint& factor: factors) factors_.push_back(factor);
   dkeys_ = dkeys;
-  dkey_ = dkeys.back();
-  cardinality_ = dkey_.second;
+  which_op_ = which_op;
 }
 
 /* ************************************************************************* */
 void OperatorConstraint::print(const string& s, const KeyFormatter& formatter) const {
-  cout << s << "OperatorConstraint on "
-      << formatter(dkey_.first) << endl;
+  std::cout << s << "OperatorConstraint on ";
+  for (Key dkey : keys_) std::cout << formatter(dkey) << " ";
+  std::cout << std::endl;
 }
 /* ************************************************************************* */
 double OperatorConstraint::operator()(const DiscreteValues& values) const {
-  NullOperatorConstraint null(dkeys_);
-  return factors_[values.at(dkey_.first)](values) || null(values);
+  // NullOperatorConstraint null(dkeys_);
+  // return factors_[values.at(dkey_.first)](values) || null(values);
+  return factors_[which_op_](values);
 }
 
 /* ************************************************************************* */
@@ -64,20 +75,22 @@ DecisionTreeFactor OperatorConstraint::toDecisionTreeFactor() const {
   // multiplied_fs.push_back(multiplied);
 
   // operators
-  for (size_t i=0; i < cardinality_; i++) {
-    SingleValueConstraint s_const(dkey_, i);
-    DecisionTreeFactor multiplied = s_const.toDecisionTreeFactor() * factors_[i].toDecisionTreeFactor();
-    multiplied_fs.push_back(multiplied);
-  }
+  // for (size_t i=0; i < cardinality_; i++) {
+  //   SingleValueConstraint s_const(dkey_, i);
+  //   DecisionTreeFactor multiplied = s_const.toDecisionTreeFactor() * factors_[i].toDecisionTreeFactor();
+  //   multiplied_fs.push_back(multiplied);
+  // }
   
-  // combine into one huge tree
-  DecisionTreeFactor added_f;
-  vector<double> table;
-  for (size_t i=0; i < multiplied_fs.size(); i++) {
-    added_f = added_f.create();
-  }
+  // // combine into one huge tree
+  // DecisionTreeFactor added_f;
+  // vector<double> table;
+  // for (size_t i=0; i < multiplied_fs.size(); i++) {
+  //   added_f = added_f.create();
+  // }
 
-  return added_f;  
+  // return added_f;
+  DecisionTreeFactor op_f = factors_[which_op_].toDecisionTreeFactor();
+  return op_f;
 }
 
 /* ************************************************************************* */
