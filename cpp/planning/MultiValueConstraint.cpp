@@ -1,8 +1,8 @@
 /*
- * SingleValue.cpp
+ * MultiValueConstraint.cpp
  * @brief domain constraint
- * @date Feb 13, 2012
- * @author Frank Dellaert
+ * @date Mar 20, 2022
+ * @author Yoonwoo Kim
  */
 
 #include <gtsam/base/Testable.h>
@@ -24,7 +24,8 @@ MultiValueConstraint::MultiValueConstraint(const DiscreteKeys& dkeys,
 }
 
 /* ************************************************************************* */
-void MultiValueConstraint::print(const std::string& s, const KeyFormatter& formatter) const {
+void MultiValueConstraint::print(const std::string& s,
+  const KeyFormatter& formatter) const {
   std::cout << s << "MultiValueConstraint on ";
   for (Key dkey : keys_) std::cout << formatter(dkey) << " ";
   std::cout << std::endl;
@@ -33,7 +34,7 @@ void MultiValueConstraint::print(const std::string& s, const KeyFormatter& forma
 /* ************************************************************************* */
 double MultiValueConstraint::operator()(const DiscreteValues& values) const {
   for (size_t i=0; i < values_.size(); i++) {
-    size_t value = values.at(keys_[i]);  // get the value for that key
+    size_t value = values.at(keys_[i]);
     if (value != values_[i]) return 0.0;
   }
   return 1.0;
@@ -52,7 +53,6 @@ DecisionTreeFactor MultiValueConstraint::toDecisionTreeFactor() const {
 
 /* ************************************************************************* */
 DecisionTreeFactor MultiValueConstraint::operator*(const DecisionTreeFactor& f) const {
-  // TODO: can we do this more efficiently?
   return toDecisionTreeFactor() * f;
 }
 

@@ -1,8 +1,8 @@
 /*
- * SingleValue.cpp
- * @brief domain constraint
- * @date Feb 13, 2012
- * @author Frank Dellaert
+ * MutexConstraint.cpp
+ * @brief Mutually exclusive constraint
+ * @date Mar 20, 2022
+ * @author Yoonwoo Kim
  */
 
 #include <gtsam/base/Testable.h>
@@ -36,7 +36,7 @@ void MutexConstraint::print(const std::string& s, const KeyFormatter& formatter)
 double MutexConstraint::operator()(const DiscreteValues& values) const {
   size_t count = 0;
   for (size_t i=0; i < values_.size(); i++) {
-    size_t value = values.at(keys_[i]);  // get the value for that key
+    size_t value = values.at(keys_[i]);
     if (value == values_[i]) count++;
     if (count > 1.0) return 0.0;
   }

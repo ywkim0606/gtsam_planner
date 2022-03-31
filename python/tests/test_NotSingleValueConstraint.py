@@ -27,12 +27,20 @@ class TestNotSingleValueConstraint(GtsamTestCase):
         self.val = 3
         self.constraint = NotSingleValueConstraint(self.key, self.val)
 
-    def test_operator(self):
+    def test_operatorFalse(self):
+        """Tests if factor returns false when input is certain value"""
         values = DiscreteValues()
         values[self.key[0]] = 3
         self.assertEqual(self.constraint(values), 0.0)
     
+    def test_operatorTrue(self):
+        """Tests if factor returns true when input is not certain value"""
+        values = DiscreteValues()
+        values[self.key[0]] = 2
+        self.assertEqual(self.constraint(values), 1.0)
+    
     def test_toDecisionTree(self):
+        """Tests if factor can be transformed to decision tree factor"""
         expected = self.constraint.toDecisionTreeFactor()
         self.assertIsInstance(expected, DecisionTreeFactor)
         self.gtsamAssertEquals(DecisionTreeFactor(self.key, "1 1 1 0"), expected)

@@ -1,7 +1,7 @@
 /*
- * MutexConstraint.cpp
- * @brief domain constraint
- * @date Feb 6, 2012
+ * NullOperatorConstraint.cpp
+ * @brief NullOperatorConstraint constraint
+ * @date Mar 20, 2022
  * @author Yoonwoo Kim
  */
 
@@ -44,33 +44,6 @@ double NullOperatorConstraint::operator()(const DiscreteValues& values) const {
 
 /* ************************************************************************* */
 DecisionTreeFactor NullOperatorConstraint::toDecisionTreeFactor() const {
-  // const vector<DiscreteValues> assignments = DiscreteValues::CartesianProduct(dkeys_);
-  // vector<double> table;
-  // for(auto assignment: assignments) {
-  //   size_t half = assignment.size() / 2;
-  //   size_t is_same = 1;
-  //   for (size_t i=0; i<assignment.size()-half; i++) {
-  //     is_same *= (assignment.at(i) == assignment.at(i+half));      
-  //   }
-  //   table.push_back(is_same);
-  // }
-  // DecisionTreeFactor converted(dkeys_, table);
-  // return converted;
-  // const std::vector<DiscreteValues> assignments = DiscreteValues::CartesianProduct(dkeys_);
-  // vector<double> table;
-  // for(auto assignment: assignments) {
-  //   size_t half = assignment.size() / 2;
-  //   size_t is_same = 1;
-  //   for (auto it=assignment.begin(); it != assignment.end(); it++) {
-  //     size_t key_t = it->first;
-  //     size_t key_tp = it->first + half;
-  //     if (key_tp > assignment.end()->first+1) break;
-  //     is_same *= int(assignment.at(key_t) == assignment.at(key_tp));
-  //   }
-  //   table.push_back(is_same);
-  // }
-  // DecisionTreeFactor converted(dkeys_, table);
-  // return converted;
   DecisionTreeFactor converted;
   size_t nrKeys = dkeys_.size();
   for (size_t i=0; i<dkeys_t_.size(); i++) {

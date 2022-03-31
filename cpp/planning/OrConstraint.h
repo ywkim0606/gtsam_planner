@@ -1,7 +1,7 @@
 /*
- * MutexConstraint.h
- * @brief domain constraint
- * @date Feb 6, 2012
+ * OrConstraint.h
+ * @brief OR constraint
+ * @date Mar 20, 2022
  * @author Yoonwoo Kim
  */
 
@@ -19,7 +19,7 @@ using namespace gtsam;
 namespace gtsam_planner {
 
 /**
- * Operator constraint: choose an operator = factors_[values].
+ * OR constraint: 
  */
 class OrConstraint : public DiscreteFactor {
   vector<DecisionTreeFactor> factors_;  /// < all possible operators

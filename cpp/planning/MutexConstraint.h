@@ -1,11 +1,11 @@
 /*
- * SingleValue.h
- * @brief domain constraint
- * @date Feb 6, 2012
- * @author Frank Dellaert
+ * MutexConstraint.h
+ * @brief Mutually exclusive constraint
+ * @date Mar 20, 2022
+ * @author Yoonwoo Kim
  */
 
-#pragma once
+#pragma
 
 #include <gtsam/discrete/DiscreteFactor.h>
 #include <gtsam/discrete/DiscreteValues.h>
@@ -18,11 +18,12 @@ using namespace gtsam;
 namespace gtsam_planner {
 
 /**
- * SingleValue constraint: ensures a variable takes on a certain value.
- * This could of course also be implemented by changing its `Domain`.
+ * Mutex constraint: Mutually exclusive constraint.
+ * i.e (A, B, [1, 2]) variable A and B can take
+ * 1 and 2 each but should not take them at the same time.
  */
 class MutexConstraint : public DiscreteFactor {
-  std::vector<size_t> values_;        ///<  allowed values
+  std::vector<size_t> values_;
 
   std::map<Key, size_t> cardinalities_;
 
@@ -33,7 +34,7 @@ class MutexConstraint : public DiscreteFactor {
 
  public:
 
-  /// Construct from keys, and tentative values.
+  /// Construct from keys, and mutually exclusive values.
   MutexConstraint(const DiscreteKeys& dkeys,
                     const std::vector<size_t>& values);
 

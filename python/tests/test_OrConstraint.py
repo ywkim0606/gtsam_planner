@@ -5,7 +5,7 @@ All Rights Reserved
 
 See LICENSE for the license information
 
-MultiValueConstraint unit tests.
+OrConstraint unit tests.
 Author: Yoonwoo Kim
 """
 import unittest

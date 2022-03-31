@@ -1,8 +1,8 @@
 /*
- * SingleValue.cpp
+ * BinarySameConstraint.cpp
  * @brief domain constraint
- * @date Feb 13, 2012
- * @author Frank Dellaert
+ * @date Mar 20, 2022
+ * @author Yoonwoo Kim
  */
 
 #include <gtsam/base/Testable.h>

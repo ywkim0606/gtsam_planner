@@ -1,7 +1,7 @@
 /*
- * MutexConstraint.cpp
- * @brief domain constraint
- * @date Feb 6, 2012
+ * OrConstraint.h
+ * @brief OR constraint
+ * @date Mar 20, 2022
  * @author Yoonwoo Kim
  */
 
@@ -22,9 +22,7 @@ OrConstraint::OrConstraint(const vector<DecisionTreeFactor>& factors)
   set<DiscreteKey> dkeys_set;
   for (DecisionTreeFactor factor : factors) {
     DiscreteKeys dkeys = factor.discreteKeys();
-    for (DiscreteKey dkey : dkeys) {
-      dkeys_set.insert(dkey);
-    }
+    for (DiscreteKey dkey : dkeys) dkeys_set.insert(dkey);
   }
   dkeys_ = {dkeys_set.begin(), dkeys_set.end()};
   for (const DiscreteKey& dkey : dkeys_) cardinalities_.insert(dkey);

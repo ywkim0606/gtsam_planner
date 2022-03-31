@@ -1,8 +1,8 @@
 /*
- * SingleValue.h
+ * MultiValueConstraint.h
  * @brief domain constraint
- * @date Feb 6, 2012
- * @author Frank Dellaert
+ * @date Mar 20, 2022
+ * @author Yoonwoo Kim
  */
 
 #pragma once
@@ -18,8 +18,8 @@ using namespace gtsam;
 namespace gtsam_planner {
 
 /**
- * SingleValue constraint: ensures a variable takes on a certain value.
- * This could of course also be implemented by changing its `Domain`.
+ * MultiValue constraint: ensures variables takes on a certain value.
+ * Combination of SingleValue constraints
  */
 class MultiValueConstraint : public DiscreteFactor {
   std::vector<size_t> values_;        ///<  allowed values

@@ -1,7 +1,7 @@
 /*
- * MutexConstraint.cpp
- * @brief domain constraint
- * @date Feb 6, 2012
+ * OperatorConstraint.cpp
+ * @brief OperatorConstraint constraint
+ * @date Mar 20, 2022
  * @author Yoonwoo Kim
  */
 

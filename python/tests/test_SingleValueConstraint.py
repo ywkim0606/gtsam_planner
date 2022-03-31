@@ -27,10 +27,15 @@ class TestSingleValueConstraint(GtsamTestCase):
         self.val = 3
         self.constraint = SingleValueConstraint(self.key, self.val)
 
-    def test_operator(self):
+    def test_operatorTrue(self):
         values = DiscreteValues()
         values[self.key[0]] = 3
         self.assertEqual(self.constraint(values), 1.0)
+    
+    def test_operatorFalse(self):
+        values = DiscreteValues()
+        values[self.key[0]] = 2
+        self.assertEqual(self.constraint(values), 0.0)
     
     def test_toDecisionTree(self):
         expected = self.constraint.toDecisionTreeFactor()

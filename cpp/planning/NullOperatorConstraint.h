@@ -1,7 +1,7 @@
 /*
- * MutexConstraint.h
- * @brief domain constraint
- * @date Feb 6, 2012
+ * NullOperatorConstraint.h
+ * @brief NullOperatorConstraint constraint
+ * @date Mar 20, 2022
  * @author Yoonwoo Kim
  */
 
@@ -12,15 +12,13 @@
 #include <gtsam/discrete/DiscreteKey.h>
 #include <cpp/planning/MultiValueConstraint.h>
 
-#include <boost/assign.hpp>
-#include <boost/format.hpp>
-
 using namespace std;
 using namespace gtsam;
 namespace gtsam_planner {
 
 /**
- * Operator constraint: choose an operator = factors_[values].
+ * NullOperatorConstraint constraint: This operator checks if the states did not change.
+ * Checks variables at state_t and state_t+1 have same values.
  */
 class NullOperatorConstraint : public DiscreteFactor {
   map<Key, size_t> cardinalities_;

@@ -1,8 +1,8 @@
 /*
- * SingleValue.h
+ * BinarySameConstraint.h
  * @brief domain constraint
- * @date Feb 6, 2012
- * @author Frank Dellaert
+ * @date Mar 20, 2022
+ * @author Yoonwoo Kim
  */
 
 #include <gtsam/discrete/DiscreteFactor.h>
@@ -16,15 +16,14 @@ using namespace gtsam;
 namespace gtsam_planner {
 
 /**
- * SingleValue constraint: ensures a variable takes on a certain value.
- * This could of course also be implemented by changing its `Domain`.
+ * Binary same constraint: ensures two variables have same values.
  */
 class BinarySameConstraint : public DiscreteFactor {
   size_t cardinality0_, cardinality1_;
 
  public:
 
-  /// Construct from key, cardinality, and given value.
+  /// Construct from two discretekeys key1, key2
   BinarySameConstraint(const DiscreteKey& key1, const DiscreteKey& key2)
       : DiscreteFactor(boost::assign::cref_list_of<2>(key1.first)(key2.first)),
         cardinality0_(key1.second),

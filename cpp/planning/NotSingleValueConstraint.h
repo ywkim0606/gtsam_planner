@@ -1,8 +1,8 @@
 /*
- * SingleValue.h
- * @brief domain constraint
- * @date Feb 6, 2012
- * @author Frank Dellaert
+ * NotSingleValueConstraint.h
+ * @brief NotSingleValueConstraint constraint
+ * @date Mar 20, 2022
+ * @author Yoonwoo Kim
  */
 
 #pragma once
@@ -18,8 +18,7 @@ using namespace gtsam;
 namespace gtsam_planner {
 
 /**
- * SingleValue constraint: ensures a variable takes on a certain value.
- * This could of course also be implemented by changing its `Domain`.
+ * NotSingleValue constraint: ensures a variable does not take on a certain value.
  */
 class NotSingleValueConstraint : public DiscreteFactor {
   size_t cardinality_;  /// < Number of values
