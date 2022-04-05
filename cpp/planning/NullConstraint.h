@@ -52,6 +52,9 @@ class NullConstraint : public DiscreteFactor {
                           f.cardinalities_.begin());
     }
   }
+  
+  /// Return all the discrete keys associated with this factor.
+  DiscreteKeys discreteKeys() const;
 
   /// Calculate value
   double operator()(const DiscreteValues& values) const override;

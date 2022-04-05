@@ -35,6 +35,11 @@ void NullConstraint::print(const string& s, const KeyFormatter& formatter) const
 }
 
 /* ************************************************************************* */
+DiscreteKeys NullConstraint::discreteKeys() const {
+  return dkeys_;
+}
+
+/* ************************************************************************* */
 double NullConstraint::operator()(const DiscreteValues& values) const {
   for (size_t i = 0; i < dkeys_t_.size(); i++) {
     if ((values.count(dkeys_t_[i].first) != 0) && (values.count(dkeys_tp_[i].first) != 0)) {

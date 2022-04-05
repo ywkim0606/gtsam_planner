@@ -74,6 +74,7 @@ virtual class BinarySameConstraint : gtsam::DiscreteFactor {
 #include <cpp/planning/NullConstraint.h>
 virtual class NullConstraint : gtsam::DiscreteFactor {
   NullConstraint(const gtsam::DiscreteKeys& dkeys);
+  gtsam::DiscreteKeys discreteKeys() const;
   void print(const string s="",
           const gtsam::KeyFormatter& formatter = 
             gtsam::DefaultKeyFormatter) const;
