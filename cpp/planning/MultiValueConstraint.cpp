@@ -19,23 +19,31 @@ namespace gtsam_planner {
 /* ************************************************************************* */
 MultiValueConstraint::MultiValueConstraint(const DiscreteKeys& dkeys,
   const vector<size_t>& values) : DiscreteFactor(dkeys.indices()) {
+  dkeys_ = dkeys;
   for (const DiscreteKey& dkey : dkeys) cardinalities_.insert(dkey);
   for (const size_t& value : values) values_.push_back(value);
 }
 
 /* ************************************************************************* */
-void MultiValueConstraint::print(const std::string& s,
+void MultiValueConstraint::print(const string& s,
   const KeyFormatter& formatter) const {
-  std::cout << s << "MultiValueConstraint on ";
-  for (Key dkey : keys_) std::cout << formatter(dkey) << " ";
-  std::cout << std::endl;
+  cout << s << "MultiValueConstraint on ";
+  for (Key dkey : keys_) cout << formatter(dkey) << " ";
+  cout << ::endl;
+}
+
+/* ************************************************************************* */
+DiscreteKeys MultiValueConstraint::discreteKeys() const {
+  return dkeys_;
 }
 
 /* ************************************************************************* */
 double MultiValueConstraint::operator()(const DiscreteValues& values) const {
   for (size_t i=0; i < values_.size(); i++) {
-    size_t value = values.at(keys_[i]);
-    if (value != values_[i]) return 0.0;
+    if (values.count(keys_[i]) != 0) {
+      size_t value = values.at(keys_[i]);
+      if (value != values_[i]) return 0.0;
+    }
   }
   return 1.0;
 }

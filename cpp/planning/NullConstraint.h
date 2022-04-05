@@ -1,6 +1,6 @@
 /*
- * NullOperatorConstraint.h
- * @brief NullOperatorConstraint constraint
+ * NullConstraint.h
+ * @brief NullConstraint constraint
  * @date Mar 20, 2022
  * @author Yoonwoo Kim
  */
@@ -10,26 +10,32 @@
 #include <gtsam/discrete/DiscreteFactor.h>
 #include <gtsam/discrete/DiscreteValues.h>
 #include <gtsam/discrete/DiscreteKey.h>
-#include <cpp/planning/MultiValueConstraint.h>
 
 using namespace std;
 using namespace gtsam;
 namespace gtsam_planner {
 
 /**
- * NullOperatorConstraint constraint: This operator checks if the states did not change.
+ * NullConstraint constraint: This operator checks if the states did not change.
  * Checks variables at state_t and state_t+1 have same values.
  */
-class NullOperatorConstraint : public DiscreteFactor {
+class NullConstraint : public DiscreteFactor {
   map<Key, size_t> cardinalities_;
   DiscreteKeys dkeys_;
   DiscreteKeys dkeys_t_;
   DiscreteKeys dkeys_tp_;
+  DiscreteKey discreteKey(size_t i) const {
+  Key j = keys_[i];
+  return DiscreteKey(j, cardinalities_.at(j));
+  }
 
  public:
-
+ 
+  // /// Default constructor for I/O
+  // NullConstraint();
+  
   /// Construct from factors.
-  NullOperatorConstraint(const DiscreteKeys& dkeys);
+  NullConstraint(const DiscreteKeys& dkeys);
 
   // print
   void print(const std::string& s = "", const KeyFormatter& formatter =
@@ -37,10 +43,10 @@ class NullOperatorConstraint : public DiscreteFactor {
 
   /// equals
   bool equals(const DiscreteFactor& other, double tol) const override {
-    if (!dynamic_cast<const NullOperatorConstraint*>(&other))
+    if (!dynamic_cast<const NullConstraint*>(&other))
       return false;
     else {
-      const NullOperatorConstraint& f(static_cast<const NullOperatorConstraint&>(other));
+      const NullConstraint& f(static_cast<const NullConstraint&>(other));
       return cardinalities_.size() == f.cardinalities_.size() &&
               std::equal(cardinalities_.begin(), cardinalities_.end(),
                           f.cardinalities_.begin());

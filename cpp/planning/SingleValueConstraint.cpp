@@ -25,7 +25,11 @@ void SingleValueConstraint::print(const string& s, const KeyFormatter& formatter
 
 /* ************************************************************************* */
 double SingleValueConstraint::operator()(const DiscreteValues& values) const {
-  return (double)(values.at(keys_[0]) == value_);
+  if (values.count(keys_[0]) != 0) {
+      return (double)(values.at(keys_[0]) == value_);
+  }
+  return 0.0;
+  // return (double)(values.at(keys_[0]) == value_);
 }
 
 /* ************************************************************************* */

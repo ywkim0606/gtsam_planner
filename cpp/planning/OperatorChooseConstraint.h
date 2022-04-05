@@ -1,6 +1,6 @@
 /*
- * MultiValueConstraint.h
- * @brief domain constraint
+ * OperatorChooseConstraint.h
+ * @brief OperatorChooseConstraint constraint
  * @date Mar 20, 2022
  * @author Yoonwoo Kim
  */
@@ -10,37 +10,28 @@
 #include <gtsam/discrete/DiscreteFactor.h>
 #include <gtsam/discrete/DiscreteValues.h>
 #include <gtsam/discrete/DiscreteKey.h>
+#include <cpp/planning/MultiValueConstraint.h>
 
 #include <boost/assign.hpp>
 #include <boost/format.hpp>
 
+using namespace std;
 using namespace gtsam;
 namespace gtsam_planner {
 
 /**
- * MultiValue constraint: ensures variables takes on a certain value.
- * Combination of SingleValue constraints
+ * Operator choose constraint: choose an operator = factors_[values].
  */
-class MultiValueConstraint : public DiscreteFactor {
-  std::vector<size_t> values_;        ///<  allowed values
 
+class OperatorChooseConstraint : public DiscreteFactor {
+  vector<MultiValueConstraint> factors_;  /// < all possible operators
+  size_t which_op_;
   DiscreteKeys dkeys_;
-
-  std::map<Key, size_t> cardinalities_;
-
-  DiscreteKey discreteKey(size_t i) const {
-    Key j = keys_[i];
-    return DiscreteKey(j, cardinalities_.at(j));
-  }
 
  public:
 
-  // /// Default constructor for I/O
-  // MultiValueConstraint();
-
-  /// Construct from keys, and tentative values.
-  MultiValueConstraint(const DiscreteKeys& dkeys,
-                        const std::vector<size_t>& values);
+  /// Construct from factors.
+  OperatorChooseConstraint(const vector<MultiValueConstraint>& factors, size_t which_op);
 
   // print
   void print(const std::string& s = "", const KeyFormatter& formatter =
@@ -48,19 +39,19 @@ class MultiValueConstraint : public DiscreteFactor {
 
   /// equals
   bool equals(const DiscreteFactor& other, double tol) const override {
-    if (!dynamic_cast<const MultiValueConstraint*>(&other))
+    if (!dynamic_cast<const OperatorChooseConstraint*>(&other))
       return false;
     else {
-      const MultiValueConstraint& f(static_cast<const MultiValueConstraint&>(other));
-      return cardinalities_.size() == f.cardinalities_.size() &&
-              std::equal(cardinalities_.begin(), cardinalities_.end(),
-                        f.cardinalities_.begin()) &&
-              std::equal (values_.begin(), values_.end(), f.values_.begin());
+      const OperatorChooseConstraint& f(static_cast<const OperatorChooseConstraint&>(other));
+      if (which_op_ == f.which_op_) {
+        for (size_t i = 0; i < factors_.size(); i++) {
+          if (factors_[i].equals(f.factors_[i], 1e-9) == false) return false;
+        }
+        return true;
+      }
+      return false;
     }
   }
-
-  /// Return all the discrete keys associated with this factor.
-  DiscreteKeys discreteKeys() const;
 
   /// Calculate value
   double operator()(const DiscreteValues& values) const override;

@@ -33,12 +33,22 @@ class TestBinarySameConstraint(GtsamTestCase):
         values[self.key0[0]] = 3
         values[self.key1[0]] = 3
         self.assertEqual(self.constraint(values), 1.0)
+        # self.assertEqual(self.constraint.toDecisionTreeFactor()(values), 1.0)
     
     def test_operatorDiffVal(self):
         """Checks if factor returns 0.0 when two variables have the different value"""
         values = DiscreteValues()
         values[self.key0[0]] = 2
         values[self.key1[0]] = 3
+        self.assertEqual(self.constraint(values), 0.0)
+    
+    def test_operatorDiffMoreVal(self):
+        """Checks if factor returns 0.0 when two variables have the different value"""
+        values = DiscreteValues()
+        values[self.key0[0]] = 2
+        values[self.key1[0]] = 3
+        values[2] = 3
+        values[3] = 3
         self.assertEqual(self.constraint(values), 0.0)
     
     def test_toDecisionTree(self):

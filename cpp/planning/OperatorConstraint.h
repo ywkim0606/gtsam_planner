@@ -1,7 +1,7 @@
 /*
  * OperatorConstraint.h
  * @brief OperatorConstraint constraint
- * @date Mar 20, 2022
+ * @date Apr 3, 2022
  * @author Yoonwoo Kim
  */
 
@@ -10,35 +10,33 @@
 #include <gtsam/discrete/DiscreteFactor.h>
 #include <gtsam/discrete/DiscreteValues.h>
 #include <gtsam/discrete/DiscreteKey.h>
-#include <cpp/planning/MultiValueConstraint.h>
-
-#include <boost/assign.hpp>
-#include <boost/format.hpp>
 
 using namespace std;
 using namespace gtsam;
 namespace gtsam_planner {
 
 /**
- * Operator constraint: choose an operator = factors_[values].
+ * Operator constraint: create a factor which returns true of state_t and state_tp
+ * has values which satisfies the preconditions and effect. It is important that
+ * other variables would stay the same if not affected by the operator.
+ * i.e) state_t[0] == state_tp[0] if 0th variable is not affected by the precondtions
+ * and effect of this operator.
+ * Combination of MultiValueConstraint and NullOperatorConstraint
  */
-// class OperatorConstraint : public DiscreteFactor {
-//   vector<MultiValueConstraint> factors_;  /// < all possible operators
-//   DiscreteKeys dkeys_;
-//   DiscreteKey dkey_;
-//   size_t cardinality_;  /// < Number of values
-//   size_t which_op_;
 
 class OperatorConstraint : public DiscreteFactor {
-  vector<MultiValueConstraint> factors_;  /// < all possible operators
+  DiscreteKeys multi_;
+  vector<size_t> values_;
+  DiscreteKeys null_;
   DiscreteKeys dkeys_;
-  size_t which_op_;
+  // MultiValueConstraint multi_constraint_;
+  // NullOperatorConstraint null_constraint_;
 
  public:
 
   /// Construct from factors.
-  OperatorConstraint(const DiscreteKeys& dkeys, const vector<MultiValueConstraint>& factors,
-    size_t which_op);
+  OperatorConstraint(const DiscreteKeys& multi_keys, const vector<size_t>& values,
+    const DiscreteKeys& null_keys, const DiscreteKeys& dkeys);
 
   // print
   void print(const std::string& s = "", const KeyFormatter& formatter =
@@ -50,15 +48,16 @@ class OperatorConstraint : public DiscreteFactor {
       return false;
     else {
       const OperatorConstraint& f(static_cast<const OperatorConstraint&>(other));
-      if (which_op_ == f.which_op_) {
-        for (size_t i = 0; i < factors_.size(); i++) {
-          if (factors_[i].equals(f.factors_[i], 1e-9) == false) return false;
-        }
-        return true;
-      }
-      return false;
+      return equal(multi_.begin(), multi_.end(), f.multi_.begin()) &&
+        equal(values_.begin(), values_.end(), f.values_.begin()) &&
+        equal(null_.begin(), null_.end(), f.null_.begin());
+      // return multi_constraint_.equals(f.multi_constraint_, 1e-9) &&
+      //   null_constraint_.equals(f.null_constraint_, 1e-9);
     }
   }
+
+  /// Return all the discrete keys associated with this factor.
+  DiscreteKeys discreteKeys() const;
 
   /// Calculate value
   double operator()(const DiscreteValues& values) const override;

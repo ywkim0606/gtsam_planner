@@ -1,6 +1,6 @@
 /*
- * MultiValueConstraint.h
- * @brief domain constraint
+ * OperatorAddConstraint.h
+ * @brief OperatorAddConstraint constraint
  * @date Mar 20, 2022
  * @author Yoonwoo Kim
  */
@@ -10,37 +10,31 @@
 #include <gtsam/discrete/DiscreteFactor.h>
 #include <gtsam/discrete/DiscreteValues.h>
 #include <gtsam/discrete/DiscreteKey.h>
+#include <cpp/planning/MultiValueConstraint.h>
+#include <cpp/planning/NullConstraint.h>
 
 #include <boost/assign.hpp>
 #include <boost/format.hpp>
 
+using namespace std;
 using namespace gtsam;
 namespace gtsam_planner {
 
 /**
- * MultiValue constraint: ensures variables takes on a certain value.
- * Combination of SingleValue constraints
+ * Operator constraint: true if out of one or more OperatorConstraint is true.
  */
-class MultiValueConstraint : public DiscreteFactor {
-  std::vector<size_t> values_;        ///<  allowed values
-
+class OperatorAddConstraint : public DiscreteFactor {
+  vector<MultiValueConstraint> factors_;  /// < all possible operators
+  vector<NullConstraint> null_factors_;  /// < all possible operators
   DiscreteKeys dkeys_;
-
-  std::map<Key, size_t> cardinalities_;
-
-  DiscreteKey discreteKey(size_t i) const {
-    Key j = keys_[i];
-    return DiscreteKey(j, cardinalities_.at(j));
-  }
+  DiscreteKey dkey_;
+  size_t cardinality_;
 
  public:
 
-  // /// Default constructor for I/O
-  // MultiValueConstraint();
-
-  /// Construct from keys, and tentative values.
-  MultiValueConstraint(const DiscreteKeys& dkeys,
-                        const std::vector<size_t>& values);
+  /// Construct from factors.
+  OperatorAddConstraint(const DiscreteKey& dkey, const DiscreteKeys& dkeys,
+    const vector<MultiValueConstraint>& factors, const vector<NullConstraint>& null_factors);
 
   // print
   void print(const std::string& s = "", const KeyFormatter& formatter =
@@ -48,19 +42,22 @@ class MultiValueConstraint : public DiscreteFactor {
 
   /// equals
   bool equals(const DiscreteFactor& other, double tol) const override {
-    if (!dynamic_cast<const MultiValueConstraint*>(&other))
+    if (!dynamic_cast<const OperatorAddConstraint*>(&other))
       return false;
     else {
-      const MultiValueConstraint& f(static_cast<const MultiValueConstraint&>(other));
-      return cardinalities_.size() == f.cardinalities_.size() &&
-              std::equal(cardinalities_.begin(), cardinalities_.end(),
-                        f.cardinalities_.begin()) &&
-              std::equal (values_.begin(), values_.end(), f.values_.begin());
+      const OperatorAddConstraint& f(static_cast<const OperatorAddConstraint&>(other));
+      if (cardinality_ == f.cardinality_) {
+        for (size_t i = 0; i < factors_.size(); i++) {
+          if (factors_[i].equals(f.factors_[i], 1e-9) == false) return false;
+        }
+        return true;
+      }
+      return false;
     }
   }
 
-  /// Return all the discrete keys associated with this factor.
-  DiscreteKeys discreteKeys() const;
+  /// Return the key associated with which operator to use.
+  size_t operatorKey() const;
 
   /// Calculate value
   double operator()(const DiscreteValues& values) const override;

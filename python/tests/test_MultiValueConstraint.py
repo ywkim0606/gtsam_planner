@@ -46,6 +46,20 @@ class TestMultiValueConstraint(GtsamTestCase):
         values[self.keys.at(2)[0]] = 2
         self.assertEqual(self.constraint(values), 0.0)
 
+    def test_operatorMoreVal(self):
+        """
+        Checks if factor functions as expected when there are more values than what
+        are considered in constraint
+        """    
+        values = DiscreteValues()
+        values[self.keys.at(0)[0]] = 0
+        values[self.keys.at(1)[0]] = 1
+        values[self.keys.at(2)[0]] = 3
+        values[3] = 0
+        values[4] = 0
+        self.assertEqual(self.constraint(values), 1.0)
+        self.assertEqual(self.constraint.toDecisionTreeFactor()(values), 1.0)
+
     def test_toDecisionTree(self):
         """Tests if factor can be transformed to decision tree factor"""
         expected = self.constraint.toDecisionTreeFactor()

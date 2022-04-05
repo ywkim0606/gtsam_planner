@@ -1,13 +1,13 @@
 /*
- * NullOperatorConstraint.cpp
- * @brief NullOperatorConstraint constraint
+ * NullConstraint.cpp
+ * @brief NullConstraint constraint
  * @date Mar 20, 2022
  * @author Yoonwoo Kim
  */
 
 #include <gtsam/base/Testable.h>
 #include <gtsam/discrete/DecisionTreeFactor.h>
-#include <cpp/planning/NullOperatorConstraint.h>
+#include <cpp/planning/NullConstraint.h>
 #include <cpp/planning/BinarySameConstraint.h>
 
 #include <boost/make_shared.hpp>
@@ -17,7 +17,7 @@ using namespace std;
 namespace gtsam_planner {
 
 /* ************************************************************************* */
-NullOperatorConstraint::NullOperatorConstraint(const DiscreteKeys& dkeys)
+NullConstraint::NullConstraint(const DiscreteKeys& dkeys)
   : DiscreteFactor(dkeys.indices()) {
   dkeys_ = dkeys;
   for (const DiscreteKey& dkey : dkeys) cardinalities_.insert(dkey);
@@ -28,22 +28,24 @@ NullOperatorConstraint::NullOperatorConstraint(const DiscreteKeys& dkeys)
 }
 
 /* ************************************************************************* */
-void NullOperatorConstraint::print(const string& s, const KeyFormatter& formatter) const {
-  cout << s << "NullOperatorConstraint on ";
+void NullConstraint::print(const string& s, const KeyFormatter& formatter) const {
+  cout << s << "NullConstraint on ";
   for (Key dkey : keys_) cout << formatter(dkey) << " ";
   cout << endl;
 }
 
 /* ************************************************************************* */
-double NullOperatorConstraint::operator()(const DiscreteValues& values) const {
+double NullConstraint::operator()(const DiscreteValues& values) const {
   for (size_t i = 0; i < dkeys_t_.size(); i++) {
-    if (values.at(dkeys_t_[i].first) != values.at(dkeys_tp_[i].first)) return 0.0;
+    if ((values.count(dkeys_t_[i].first) != 0) && (values.count(dkeys_tp_[i].first) != 0)) {
+      if (values.at(dkeys_t_[i].first) != values.at(dkeys_tp_[i].first)) return 0.0;
+    }
   }
   return 1.0;
 }
 
 /* ************************************************************************* */
-DecisionTreeFactor NullOperatorConstraint::toDecisionTreeFactor() const {
+DecisionTreeFactor NullConstraint::toDecisionTreeFactor() const {
   DecisionTreeFactor converted;
   size_t nrKeys = dkeys_.size();
   for (size_t i=0; i<dkeys_t_.size(); i++) {
@@ -54,7 +56,7 @@ DecisionTreeFactor NullOperatorConstraint::toDecisionTreeFactor() const {
 }
 
 /* ************************************************************************* */
-DecisionTreeFactor NullOperatorConstraint::operator*(const DecisionTreeFactor& f) const {
+DecisionTreeFactor NullConstraint::operator*(const DecisionTreeFactor& f) const {
   // TODO: can we do this more efficiently?
   return toDecisionTreeFactor() * f;
 }

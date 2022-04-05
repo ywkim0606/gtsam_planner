@@ -15,7 +15,7 @@ import numpy as np
 import gtsam
 from gtsam import DecisionTreeFactor, DiscreteValues, DiscreteKeys
 import gtsam_planner
-from gtsam_planner import NullOperatorConstraint
+from gtsam_planner import NullConstraint
 from gtsam.utils.test_case import GtsamTestCase
 
 
@@ -31,7 +31,7 @@ class TestNullOperatorConstraint(GtsamTestCase):
         key_list = [(0, 2), (1, 2), (2, 2), (3, 2)]
         for key in key_list:
             self.keys.push_back(key)
-        self.constraint = NullOperatorConstraint(self.keys)
+        self.constraint = NullConstraint(self.keys)
 
     def test_operatorTrue0(self):
         """
@@ -80,6 +80,21 @@ class TestNullOperatorConstraint(GtsamTestCase):
         values[self.keys.at(2)[0]] = 0
         values[self.keys.at(3)[0]] = 0
         self.assertEqual(self.constraint(values), 0.0)
+    
+    def test_operatorMoreVal(self):
+        """
+        Checks if factor functions as expected when there are more values than what
+        are considered in constraint
+        """    
+        values = DiscreteValues()
+        values[self.keys.at(0)[0]] = 0
+        values[self.keys.at(1)[0]] = 0
+        values[self.keys.at(2)[0]] = 0
+        values[self.keys.at(3)[0]] = 0
+        values[4] = 0
+        values[5] = 0
+        self.assertEqual(self.constraint(values), 1.0)
+        self.assertEqual(self.constraint.toDecisionTreeFactor()(values), 1.0)
 
     def test_toDecisionTree(self):
         """
