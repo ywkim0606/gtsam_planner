@@ -9,6 +9,8 @@
 #include <gtsam/discrete/DecisionTreeFactor.h>
 #include <cpp/planning/SingleValueConstraint.h>
 #include <cpp/planning/OperatorAddConstraint.h>
+#include <cpp/planning/MultiValueConstraint.h>
+#include <cpp/planning/NullConstraint.h>
 
 #include <boost/make_shared.hpp>
 using namespace gtsam;
@@ -18,13 +20,12 @@ namespace gtsam_planner {
 
 /* ************************************************************************* */
 OperatorAddConstraint::OperatorAddConstraint(const DiscreteKey& dkey,
-  const DiscreteKeys&dkeys, const vector<MultiValueConstraint>& factors,
-  const vector<NullConstraint>& null_factors) 
-: DiscreteFactor(dkeys.indices()) {
+    const DiscreteKeys& dkeys, const vector<MultiValueConstraint>& factors,
+    const vector<NullConstraint>& null_factors) : DiscreteFactor(dkeys.indices()) {
   for (const MultiValueConstraint& factor: factors) factors_.push_back(factor);
   for (const NullConstraint& factor: null_factors) null_factors_.push_back(factor);
-  dkeys_ = dkeys;
   dkey_ = dkey;
+  dkeys_ = dkeys;
   cardinality_ = dkey_.second;
 }
 

@@ -25,12 +25,12 @@ namespace gtsam_planner {
  */
 class OperatorAddConstraint : public DiscreteFactor {
   vector<MultiValueConstraint> factors_;  /// < all possible operators
-  vector<NullConstraint> null_factors_;  /// < all possible operators
+  vector<NullConstraint> null_factors_;  /// < all null operators
   DiscreteKeys dkeys_;
   DiscreteKey dkey_;
   size_t cardinality_;
 
- public:
+  public:
 
   /// Construct from factors.
   OperatorAddConstraint(const DiscreteKey& dkey, const DiscreteKeys& dkeys,
@@ -45,7 +45,7 @@ class OperatorAddConstraint : public DiscreteFactor {
     if (!dynamic_cast<const OperatorAddConstraint*>(&other))
       return false;
     else {
-      const OperatorAddConstraint& f(static_cast<const OperatorAddConstraint&>(other));
+      const OperatorAddConstraint& f(dynamic_cast<const OperatorAddConstraint&>(other));
       if (cardinality_ == f.cardinality_) {
         for (size_t i = 0; i < factors_.size(); i++) {
           if (factors_[i].equals(f.factors_[i], 1e-9) == false) return false;
