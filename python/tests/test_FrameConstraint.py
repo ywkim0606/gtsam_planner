@@ -28,7 +28,6 @@ class TestFrameConstraint(GtsamTestCase):
     def setUp(self):
         self.keys0 = gtsam.DiscreteKeys()
         self.keys1 = gtsam.DiscreteKeys()
-        self.keys2 = gtsam.DiscreteKeys()
         all_keys = gtsam.DiscreteKeys()
         self.single_key = (5, 2)
         key_list = [(0, 2), (1, 2), (2, 2), (3, 2), (4, 2)]
@@ -54,7 +53,7 @@ class TestFrameConstraint(GtsamTestCase):
         values[self.keys0.at(0)[0]] = 0
         values[self.keys0.at(1)[0]] = 1
         values[self.keys0.at(2)[0]] = 0
-        values[self.keys0.at(2)[0]] = 1
+        values[self.keys0.at(3)[0]] = 1
         
         self.assertEqual(self.frame(values), 1.0)
         self.assertEqual(self.frame.toDecisionTreeFactor()(values), 1.0)
@@ -65,8 +64,8 @@ class TestFrameConstraint(GtsamTestCase):
         values[self.single_key[0]] = 0
         values[self.keys0.at(0)[0]] = 0
         values[self.keys0.at(1)[0]] = 1
-        values[self.keys0.at(2)[0]] = 0
         values[self.keys0.at(2)[0]] = 1
+        values[self.keys0.at(3)[0]] = 1
         self.assertEqual(self.frame(values), 0.0)
         self.assertEqual(self.frame.toDecisionTreeFactor()(values), 0.0)
     
@@ -74,9 +73,10 @@ class TestFrameConstraint(GtsamTestCase):
         """Checks if factor returns 1.0 when variables have tentative values"""
         values = gtsam.DiscreteValues()
         values[self.single_key[0]] = 1
-        values[self.keys1.at(0)[0]] = 0
-        values[self.keys1.at(1)[0]] = 2
-        values[self.keys1.at(2)[0]] = 0
+        values[self.keys1.at(0)[0]] = 1
+        values[self.keys1.at(1)[0]] = 0
+        values[self.keys1.at(2)[0]] = 1
+        values[self.keys1.at(3)[0]] = 0
         self.assertEqual(self.frame(values), 1.0)
         self.assertEqual(self.frame.toDecisionTreeFactor()(values), 1.0)
     
@@ -84,28 +84,10 @@ class TestFrameConstraint(GtsamTestCase):
         """Checks if factor returns 0.0 when variables does not have tentative values"""
         values = gtsam.DiscreteValues()
         values[self.single_key[0]] = 1
-        values[self.keys1.at(0)[0]] = 0
-        values[self.keys1.at(1)[0]] = 1
-        values[self.keys1.at(2)[0]] = 0
-        self.assertEqual(self.frame(values), 0.0)
-        self.assertEqual(self.frame.toDecisionTreeFactor()(values), 0.0)
-    
-    def test_operatorTrue2(self):
-        """Checks if factor returns 1.0 when variables have tentative values"""
-        values = gtsam.DiscreteValues()
-        values[self.single_key[0]] = 2
-        values[self.keys2.at(0)[0]] = 2
-        values[self.keys2.at(1)[0]] = 1
-        values[self.keys2.at(2)[0]] = 1
-        self.assertEqual(self.frame(values), 1.0)
-        self.assertEqual(self.frame.toDecisionTreeFactor()(values), 1.0)
-    
-    def test_operatorFalse2(self):
-        """Checks if factor returns 0.0 when variables does not have tentative values"""
-        values = gtsam.DiscreteValues()
-        values[self.single_key[0]] = 2
-        values[self.keys2.at(1)[0]] = 1
-        values[self.keys2.at(2)[0]] = 0
+        values[self.keys1.at(0)[0]] = 1
+        values[self.keys1.at(1)[0]] = 0
+        values[self.keys1.at(2)[0]] = 1
+        values[self.keys1.at(3)[0]] = 1
         self.assertEqual(self.frame(values), 0.0)
         self.assertEqual(self.frame.toDecisionTreeFactor()(values), 0.0)
 
