@@ -60,6 +60,18 @@ virtual class MutexConstraint : gtsam::DiscreteFactor {
   gtsam::DecisionTreeFactor toDecisionTreeFactor() const;
 };
 
+// #include <cpp/planning/MutexAddConstraint.h>
+// virtual class MutexAddConstraint : gtsam::DiscreteFactor {
+//   MutexAddConstraint(const gtsam::DiscreteKey& dkey,
+//     const gtsam::DiscreteKeys& dkeys, const std::vector<size_t>& values);
+//   void print(const string s="",
+//           const gtsam::KeyFormatter& formatter = 
+//             gtsam::DefaultKeyFormatter) const;
+//   bool equals(const gtsam::DiscreteFactor& other, double tol) const;
+//   double operator()(const gtsam::DiscreteValues& values) const;
+//   gtsam::DecisionTreeFactor toDecisionTreeFactor() const;
+// };
+
 #include <cpp/planning/BinarySameConstraint.h>
 virtual class BinarySameConstraint : gtsam::DiscreteFactor {
   BinarySameConstraint(const gtsam::DiscreteKey& key1, const gtsam::DiscreteKey& key2);
@@ -83,41 +95,67 @@ virtual class NullConstraint : gtsam::DiscreteFactor {
   gtsam::DecisionTreeFactor toDecisionTreeFactor() const;
 };
 
-#include <cpp/planning/OperatorChooseConstraint.h>
-virtual class OperatorChooseConstraint : gtsam::DiscreteFactor {
-  OperatorChooseConstraint(const std::vector<gtsam_planner::MultiValueConstraint>& factors,
-    std::size_t which_op);
+// #include <cpp/planning/OperatorChooseConstraint.h>
+// virtual class OperatorChooseConstraint : gtsam::DiscreteFactor {
+//   OperatorChooseConstraint(const std::vector<gtsam_planner::MultiValueConstraint>& factors,
+//     std::size_t which_op);
+//   void print(const string s="",
+//           const gtsam::KeyFormatter& formatter = 
+//             gtsam::DefaultKeyFormatter) const;
+//   bool equals(const gtsam::DiscreteFactor& other, double tol) const;
+//   double operator()(const gtsam::DiscreteValues& values) const;
+//   gtsam::DecisionTreeFactor toDecisionTreeFactor() const;
+// };
+
+// #include <cpp/planning/OperatorAddConstraint.h>
+// virtual class OperatorAddConstraint : gtsam::DiscreteFactor {
+//   OperatorAddConstraint(const gtsam::DiscreteKey& dkey, const gtsam::DiscreteKeys& dkeys,
+//     const std::vector<gtsam_planner::MultiValueConstraint>& factors,
+//     const std::vector<gtsam_planner::NullConstraint>& null_factors);
+//   void print(const string s="",
+//           const gtsam::KeyFormatter& formatter = 
+//             gtsam::DefaultKeyFormatter) const;
+//   double operatorKey() const;
+//   bool equals(const gtsam::DiscreteFactor& other, double tol) const;
+//   double operator()(const gtsam::DiscreteValues& values) const;
+//   gtsam::DecisionTreeFactor toDecisionTreeFactor() const;
+// };
+
+// #include <cpp/planning/OperatorConstraint.h>
+// virtual class OperatorConstraint : gtsam::DiscreteFactor {
+//   OperatorConstraint(const gtsam::DiscreteKeys& multi_keys, const std::vector<size_t>& values,
+//     const gtsam::DiscreteKeys& null_keys, const gtsam::DiscreteKeys& dkeys);
+//   void print(const string s="",
+//           const gtsam::KeyFormatter& formatter = 
+//             gtsam::DefaultKeyFormatter) const;
+//   bool equals(const gtsam::DiscreteFactor& other, double tol) const;
+//   gtsam::DiscreteKeys discreteKeys() const;
+//   double operator()(const gtsam::DiscreteValues& values) const;
+//   gtsam::DecisionTreeFactor toDecisionTreeFactor() const;
+// };
+
+#include <cpp/planning/OperatorOrConstraint.h>
+virtual class OperatorOrConstraint : gtsam::DiscreteFactor {
+  OperatorOrConstraint(const gtsam::DiscreteKey& dkey, const gtsam::DiscreteKeys& dkeys,
+    const std::vector<gtsam_planner::MultiValueConstraint>& factors);
   void print(const string s="",
           const gtsam::KeyFormatter& formatter = 
             gtsam::DefaultKeyFormatter) const;
   bool equals(const gtsam::DiscreteFactor& other, double tol) const;
+  double operatorKey() const;
   double operator()(const gtsam::DiscreteValues& values) const;
   gtsam::DecisionTreeFactor toDecisionTreeFactor() const;
 };
 
-#include <cpp/planning/OperatorAddConstraint.h>
-virtual class OperatorAddConstraint : gtsam::DiscreteFactor {
-  OperatorAddConstraint(const gtsam::DiscreteKey& dkey, const gtsam::DiscreteKeys& dkeys,
-    const std::vector<gtsam_planner::MultiValueConstraint>& factors,
+#include <cpp/planning/FrameConstraint.h>
+virtual class FrameConstraint : gtsam::DiscreteFactor {
+  FrameConstraint(const gtsam::DiscreteKey& dkey, const gtsam::DiscreteKeys& dkeys,
     const std::vector<gtsam_planner::NullConstraint>& null_factors);
   void print(const string s="",
           const gtsam::KeyFormatter& formatter = 
             gtsam::DefaultKeyFormatter) const;
   double operatorKey() const;
   bool equals(const gtsam::DiscreteFactor& other, double tol) const;
-  double operator()(const gtsam::DiscreteValues& values) const;
-  gtsam::DecisionTreeFactor toDecisionTreeFactor() const;
-};
-
-#include <cpp/planning/OperatorConstraint.h>
-virtual class OperatorConstraint : gtsam::DiscreteFactor {
-  OperatorConstraint(const gtsam::DiscreteKeys& multi_keys, const std::vector<size_t>& values,
-    const gtsam::DiscreteKeys& null_keys, const gtsam::DiscreteKeys& dkeys);
-  void print(const string s="",
-          const gtsam::KeyFormatter& formatter = 
-            gtsam::DefaultKeyFormatter) const;
-  bool equals(const gtsam::DiscreteFactor& other, double tol) const;
-  gtsam::DiscreteKeys discreteKeys() const;
   double operator()(const gtsam::DiscreteValues& values) const;
   gtsam::DecisionTreeFactor toDecisionTreeFactor() const;
 };
