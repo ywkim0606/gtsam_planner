@@ -4,8 +4,7 @@ from gtsam import *
 
 # import gtbook
 import gtbook
-from gtbook.discrete import *
-variables = Variables()
+from gtbook.discrete import Variables
 
 # import local package
 import gtsam_planner
@@ -23,16 +22,18 @@ class SASToGTSAM():
         for op in self.ops:
             self.ops_names.append(op.name)
         self.state_keys = list(self.vars.keys())
+        self.variables = Variables()
+
     
     def generate_state(self, timestep):
         state = []
         for var, val in self.vars.items():
-            state_var = variables.discrete(str(var)+"_"+str(timestep), val)
+            state_var = self.variables.discrete(str(var)+"_"+str(timestep), val)
             state.append(state_var)
         return state
     
     def generate_operator_key(self, timestep):
-        op_var = variables.discrete("op_"+str(timestep), self.ops_names)
+        op_var = self.variables.discrete("op_"+str(timestep), self.ops_names)
         return op_var
     
     def generate_initial_factor(self, initial_state):
