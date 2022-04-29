@@ -5,19 +5,14 @@
  * @author Yoonwoo Kim
  */
 
-#include <cpp/planning/OrConstraint.h>
+#include <gtsam/discrete/DiscreteKey.h>
+#include <gtsam/discrete/DecisionTreeFactor.h>
+#include <gtsam/discrete/DiscreteValues.h>
 
-#include <boost/assign/std/map.hpp>
-
-#include <gtsam/base/Testable.h>
-#include <CppUnitLite/TestHarness.h>
-
-using namespace boost::assign;
 using namespace std;
 using namespace gtsam;
 
-/* ************************************************************************* */
-TEST(OrConstraint, GenerateOrConstraint) {
+int main() {
   DiscreteKey A(0,2), B(1, 2);
   DiscreteKey C(1, 2), D(2, 2);
   DecisionTreeFactor f_and(A & B, "0 0 0 1");
@@ -71,11 +66,8 @@ TEST(OrConstraint, GenerateOrConstraint) {
   values[1] = 0; //
   values[2] = 1; //
 
+  cout << "abc" << endl;
+
   cout << converted(values) << endl;
   cout << multiplied(values) << endl;
-}
-/* ************************************************************************* */
-int main() {
-  TestResult tr;
-  return TestRegistry::runAllTests(tr);
 }

@@ -51,8 +51,8 @@ TRANSLATE_OUT_OF_TIME = 21
 simplified_effect_condition_counter = 0
 added_implied_precondition_counter = 0
 
-domain = "domain.pddl"
-task = "probBLOCKS-4.0.pddl"
+domain = "downward-benchmarks/assembly/domain.pddl"
+task = "downward-benchmarks/assembly/prob23.pddl"
 
 def strips_to_sas_dictionary(groups, assert_partial):
     dictionary = {}

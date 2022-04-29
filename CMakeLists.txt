@@ -14,7 +14,6 @@ find_package(GTSAM REQUIRED) # Uses installed package
 # Note: Since Jan-2019, GTSAMConfig.cmake defines exported CMake targets that
 # automatically do include the include_directories() without the need to call
 # include_directories(), just target_link_libraries(NAME gtsam)
-# include_directories(${GTSAM_INCLUDE_DIR})
 
 # ##############################################################################
 # * 3. Add the local source directory for CMake Ensure that local folder is
@@ -33,7 +32,8 @@ add_library(${PROJECT_NAME} SHARED cpp/planning/SingleValueConstraint.h cpp/plan
                                    cpp/planning/NullConstraint.h cpp/planning/NullConstraint.cpp
                                    cpp/planning/OperatorOrConstraint.h cpp/planning/OperatorOrConstraint.cpp
                                    cpp/planning/FrameConstraint.h cpp/planning/FrameConstraint.cpp
-                                   cpp/planning/OperatorAddConstraint.h cpp/planning/OperatorAddConstraint.cpp)
+                                   cpp/planning/OperatorAddConstraint.h cpp/planning/OperatorAddConstraint.cpp
+                                   cpp/planning/ValidVariablesConstraint.h cpp/planning/ValidVariablesConstraint.cpp)
 target_link_libraries(${PROJECT_NAME} gtsam)
 
 # ##############################################################################
@@ -48,6 +48,8 @@ install(
 # # Build tests (CMake tracks the dependecy to link with GTSAM through our
 # project's static library) gtsamAddTestsGlob("${PROJECT_NAME}"
 # "tests/test*.cpp" "" "${PROJECT_NAME}")
+
+# add_subdirectory(cpp/planning/tests)
 
 # ##############################################################################
 # # Build scripts (CMake tracks the dependecy to link with GTSAM through our

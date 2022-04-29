@@ -5,7 +5,7 @@
  * @author Yoonwoo Kim
  */
 
-#pragma
+#pragma once
 
 #include <gtsam/discrete/DiscreteFactor.h>
 #include <gtsam/discrete/DiscreteValues.h>

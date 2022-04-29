@@ -5,6 +5,8 @@
  * @author Yoonwoo Kim
  */
 
+#pragma once
+
 #include <gtsam/discrete/DiscreteFactor.h>
 #include <gtsam/discrete/DiscreteValues.h>
 #include <gtsam/discrete/DiscreteKey.h>
@@ -12,22 +14,23 @@
 #include <boost/assign.hpp>
 #include <boost/format.hpp>
 
+using namespace std;
 using namespace gtsam;
+
 namespace gtsam_planner {
 
 /**
  * Binary same constraint: ensures two variables have same values.
  */
 class BinarySameConstraint : public DiscreteFactor {
-  size_t cardinality0_, cardinality1_;
+  size_t cardinality0_;
+  size_t cardinality1_;
 
  public:
 
-  /// Construct from two discretekeys key1, key2
-  BinarySameConstraint(const DiscreteKey& key1, const DiscreteKey& key2)
-      : DiscreteFactor(boost::assign::cref_list_of<2>(key1.first)(key2.first)),
-        cardinality0_(key1.second),
-        cardinality1_(key2.second) {}
+  BinarySameConstraint();
+
+  BinarySameConstraint(const DiscreteKey& key1, const DiscreteKey& key2);
 
   // print
   void print(const std::string& s = "", const KeyFormatter& formatter =

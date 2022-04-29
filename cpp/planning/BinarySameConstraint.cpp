@@ -10,10 +10,22 @@
 #include <cpp/planning/BinarySameConstraint.h>
 
 #include <boost/make_shared.hpp>
+#include <boost/assign.hpp>
+
 using namespace gtsam;
 using namespace std;
 
 namespace gtsam_planner {
+  
+/* ************************************************************************* */
+BinarySameConstraint::BinarySameConstraint() {}
+
+/* ************************************************************************* */
+BinarySameConstraint::BinarySameConstraint(const DiscreteKey& key1, const DiscreteKey& key2)
+  : DiscreteFactor(boost::assign::cref_list_of<2>(key1.first)(key2.first)){
+    cardinality0_ = key1.second;
+    cardinality1_ = key2.second;
+  }
 
 /* ************************************************************************* */
 void BinarySameConstraint::print(const string& s, const KeyFormatter& formatter) const {

@@ -30,6 +30,17 @@ class TestMultiValueConstraint(GtsamTestCase):
         self.vals = [0, 1, 3]
         self.constraint = MultiValueConstraint(self.keys, self.vals)
 
+    def test_oneKey(self):
+        keys = DiscreteKeys()
+        key = (3, 4)
+        keys.push_back(key)
+        vals = [3]
+        constraint = MultiValueConstraint(keys, vals)
+        print(constraint)
+        values = DiscreteValues()
+        values[keys.at(0)[0]] = 3
+        self.assertEqual(constraint(values), 1.0)
+
     def test_operatorTrue(self):
         """Checks if factor returns 1.0 when variables have tentative values"""
         values = DiscreteValues()

@@ -74,6 +74,7 @@ virtual class MutexConstraint : gtsam::DiscreteFactor {
 
 #include <cpp/planning/BinarySameConstraint.h>
 virtual class BinarySameConstraint : gtsam::DiscreteFactor {
+  BinarySameConstraint();
   BinarySameConstraint(const gtsam::DiscreteKey& key1, const gtsam::DiscreteKey& key2);
   void print(const string s="",
           const gtsam::KeyFormatter& formatter = 
@@ -155,6 +156,18 @@ virtual class FrameConstraint : gtsam::DiscreteFactor {
           const gtsam::KeyFormatter& formatter = 
             gtsam::DefaultKeyFormatter) const;
   double operatorKey() const;
+  bool equals(const gtsam::DiscreteFactor& other, double tol) const;
+  double operator()(const gtsam::DiscreteValues& values) const;
+  gtsam::DecisionTreeFactor toDecisionTreeFactor() const;
+};
+
+#include <cpp/planning/ValidVariablesConstraint.h>
+virtual class ValidVariablesConstraint : gtsam::DiscreteFactor {
+  ValidVariablesConstraint(const gtsam_planner::BinarySameConstraint b_factor,
+    const std::vector<gtsam_planner::MultiValueConstraint>& m_factors, const gtsam::DiscreteKeys dkeys);
+  void print(const string s="",
+          const gtsam::KeyFormatter& formatter = 
+            gtsam::DefaultKeyFormatter) const;
   bool equals(const gtsam::DiscreteFactor& other, double tol) const;
   double operator()(const gtsam::DiscreteValues& values) const;
   gtsam::DecisionTreeFactor toDecisionTreeFactor() const;
