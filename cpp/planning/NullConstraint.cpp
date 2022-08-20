@@ -7,6 +7,7 @@
 
 #include <gtsam/base/Testable.h>
 #include <gtsam/discrete/DecisionTreeFactor.h>
+#include <gtsam/discrete/TableFactor.h>
 #include <cpp/planning/NullConstraint.h>
 #include <cpp/planning/BinarySameConstraint.h>
 
@@ -61,9 +62,25 @@ DecisionTreeFactor NullConstraint::toDecisionTreeFactor() const {
 }
 
 /* ************************************************************************* */
+TableFactor NullConstraint::toTableFactor() const {
+  TableFactor converted;
+  size_t nrKeys = dkeys_.size();
+  for (size_t i=0; i<dkeys_t_.size(); i++) {
+    BinarySameConstraint bsame(dkeys_t_[i], dkeys_tp_[i]);
+    converted = converted * bsame.toTableFactor();
+  }
+  return converted;
+}
+
+/* ************************************************************************* */
 DecisionTreeFactor NullConstraint::operator*(const DecisionTreeFactor& f) const {
   // TODO: can we do this more efficiently?
   return toDecisionTreeFactor() * f;
+}
+
+/* ************************************************************************* */
+TableFactor NullConstraint::operator*(const TableFactor& f) const {
+  return toTableFactor() * f;
 }
 
 }  // namespace gtsam_planner

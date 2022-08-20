@@ -1,3 +1,6 @@
+# typing
+from typing import List
+
 # import gtsam
 import gtsam
 from gtsam import *
@@ -13,8 +16,8 @@ from gtsam_planner import *
 class SASToGTSAM():
     def __init__(self, sas):
         self.sas = sas
-        self.init = sas.initial_state
-        self.goal = sas.goal
+        self.init = self.sas.initial_state
+        self.goal = self.sas.goal
         self.vars = self.sas.variables
         self.ops = self.sas.operators
         self.mutex_groups = self.sas.mutex_group
@@ -24,15 +27,14 @@ class SASToGTSAM():
         self.state_keys = list(self.vars.keys())
         self.variables = Variables()
 
-    
-    def generate_state(self, timestep):
+    def generate_state(self, timestep: int) -> List:
         state = []
         for var, val in self.vars.items():
             state_var = self.variables.discrete(str(var)+"_"+str(timestep), val)
             state.append(state_var)
         return state
     
-    def generate_operator_key(self, timestep):
+    def generate_operator_key(self, timestep: int) -> gtsam.DiscreteKey:
         op_var = self.variables.discrete("op_"+str(timestep), self.ops_names)
         return op_var
     

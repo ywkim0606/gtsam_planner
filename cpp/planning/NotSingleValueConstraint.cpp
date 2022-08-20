@@ -7,6 +7,7 @@
 
 #include <gtsam/base/Testable.h>
 #include <gtsam/discrete/DecisionTreeFactor.h>
+#include <gtsam/discrete/TableFactor.h>
 #include <cpp/planning/NotSingleValueConstraint.h>
 
 #include <boost/make_shared.hpp>
@@ -36,14 +37,31 @@ DecisionTreeFactor NotSingleValueConstraint::toDecisionTreeFactor() const {
     if (i1 == value_) table.push_back(0.0);
     else table.push_back(1.0);
   }
-  DecisionTreeFactor converted(keys, table);
-  return converted;
+  return DecisionTreeFactor(keys, table);
+}
+
+/* ************************************************************************* */
+TableFactor NotSingleValueConstraint::toTableFactor() const {
+  DiscreteKeys keys;
+  keys += DiscreteKey(keys_[0], cardinality_);
+  vector<double> table;
+  for (size_t i1 = 0; i1 < cardinality_; i1++) {
+    if (i1 == value_) table.push_back(0.0);
+    else table.push_back(1.0);
+  }
+  return TableFactor(keys, table);
 }
 
 /* ************************************************************************* */
 DecisionTreeFactor NotSingleValueConstraint::operator*(const DecisionTreeFactor& f) const {
   // TODO: can we do this more efficiently?
   return toDecisionTreeFactor() * f;
+}
+
+/* ************************************************************************* */
+TableFactor NotSingleValueConstraint::operator*(const TableFactor& f) const {
+  // TODO: can we do this more efficiently?
+  return toTableFactor() * f;
 }
 
 /* ************************************************************************* */

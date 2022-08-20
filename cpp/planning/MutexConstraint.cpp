@@ -7,6 +7,7 @@
 
 #include <gtsam/base/Testable.h>
 #include <gtsam/discrete/DecisionTreeFactor.h>
+#include <gtsam/discrete/TableFactor.h>
 #include <cpp/planning/MutexConstraint.h>
 #include <cpp/planning/NotSingleValueConstraint.h>
 #include <cpp/planning/SingleValueConstraint.h>
@@ -63,9 +64,33 @@ DecisionTreeFactor MutexConstraint::toDecisionTreeFactor() const {
 }
 
 /* ************************************************************************* */
+TableFactor MutexConstraint::toTableFactor() const {
+  vector<TableFactor> factors;
+  size_t nrKeys = keys_.size();
+  for (size_t i = 0; i < nrKeys; i++) {
+    SingleValueConstraint single(discreteKey(i), values_[i]);
+    TableFactor singleTable = single.toTableFactor();
+    for (size_t j = 0; j < nrKeys; j++) {
+      if (i == j) continue;
+      NotSingleValueConstraint notSingle(discreteKey(j), values_[j]);
+      singleTable = singleTable * notSingle.toTableFactor();
+    }
+    factors.push_back(singleTable);
+  }
+  OrConstraint mutex(factors);
+  TableFactor mutex_table = mutex.toTableFactor();
+  return mutex_table;
+}
+
+/* ************************************************************************* */
 DecisionTreeFactor MutexConstraint::operator*(const DecisionTreeFactor& f) const {
   // TODO: can we do this more efficiently?
   return toDecisionTreeFactor() * f;
+}
+
+/* ************************************************************************* */
+TableFactor MutexConstraint::operator*(const TableFactor& f) const {
+  return toTableFactor() * f;
 }
 
 /* ************************************************************************* */

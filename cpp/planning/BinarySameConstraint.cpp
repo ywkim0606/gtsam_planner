@@ -7,6 +7,7 @@
 
 #include <gtsam/base/Testable.h>
 #include <gtsam/discrete/DecisionTreeFactor.h>
+#include <gtsam/discrete/TableFactor.h>
 #include <cpp/planning/BinarySameConstraint.h>
 
 #include <boost/make_shared.hpp>
@@ -46,8 +47,18 @@ DecisionTreeFactor BinarySameConstraint::toDecisionTreeFactor() const {
   std::vector<double> table;
   for (size_t i1 = 0; i1 < cardinality0_; i1++)
     for (size_t i2 = 0; i2 < cardinality1_; i2++) table.push_back(i1 == i2);
-  DecisionTreeFactor converted(keys, table);
-  return converted;
+  return DecisionTreeFactor(keys, table);
+}
+
+/* ************************************************************************* */
+TableFactor BinarySameConstraint::toTableFactor() const {
+  DiscreteKeys keys;
+  keys.push_back(DiscreteKey(keys_[0], cardinality0_));
+  keys.push_back(DiscreteKey(keys_[1], cardinality1_));
+  std::vector<double> table;
+  for (size_t i1 = 0; i1 < cardinality0_; i1++)
+    for (size_t i2 = 0; i2 < cardinality1_; i2++) table.push_back(i1 == i2);
+  return TableFactor(keys, table);
 }
 
 /* ************************************************************************* */
@@ -56,6 +67,10 @@ DecisionTreeFactor BinarySameConstraint::operator*(const DecisionTreeFactor& f) 
   return toDecisionTreeFactor() * f;
 }
 
+/* ************************************************************************* */
+TableFactor BinarySameConstraint::operator*(const TableFactor& f) const {
+  return toTableFactor() * f;
+}
 
 /* ************************************************************************* */
 }  // namespace gtsam

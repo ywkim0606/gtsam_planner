@@ -7,6 +7,7 @@
 
 #include <gtsam/base/Testable.h>
 #include <gtsam/discrete/DecisionTreeFactor.h>
+#include <gtsam/discrete/TableFactor.h>
 #include <cpp/planning/MultiValueConstraint.h>
 #include <cpp/planning/SingleValueConstraint.h>
 
@@ -60,8 +61,24 @@ DecisionTreeFactor MultiValueConstraint::toDecisionTreeFactor() const {
 }
 
 /* ************************************************************************* */
+TableFactor MultiValueConstraint::toTableFactor() const {
+  TableFactor converted;
+  size_t nrKeys = keys_.size();
+  for (size_t i = 0; i < nrKeys; i++) {
+    SingleValueConstraint single(discreteKey(i), values_[i]);
+    converted = converted * single.toTableFactor();
+  }
+  return converted;
+}
+
+/* ************************************************************************* */
 DecisionTreeFactor MultiValueConstraint::operator*(const DecisionTreeFactor& f) const {
   return toDecisionTreeFactor() * f;
+}
+
+/* ************************************************************************* */
+TableFactor MultiValueConstraint::operator*(const TableFactor& f) const {
+  return toTableFactor() * f;
 }
 
 /* ************************************************************************* */

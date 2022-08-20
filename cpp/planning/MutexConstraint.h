@@ -60,11 +60,17 @@ class MutexConstraint : public DiscreteFactor {
 
   /// Convert into a decisiontree
   DecisionTreeFactor toDecisionTreeFactor() const override;
+  
+  /// Convert into a decisiontree
+  TableFactor toTableFactor() const override;
 
   /// Multiply into a decisiontree
-  DecisionTreeFactor operator*(const DecisionTreeFactor& f) const override;  
+  DecisionTreeFactor operator*(const DecisionTreeFactor& f) const override;
 
-    /// Render as markdown table.
+  /// Multiply into a decisiontree
+  TableFactor operator*(const TableFactor& f) const override;    
+
+  /// Render as markdown table.
   std::string markdown(const KeyFormatter& keyFormatter = DefaultKeyFormatter,
                        const Names& names = {}) const override {
     return (boost::format("`Constraint` on %1% variables\n") % (size())).str();

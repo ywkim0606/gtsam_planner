@@ -31,9 +31,7 @@ add_library(${PROJECT_NAME} SHARED cpp/planning/SingleValueConstraint.h cpp/plan
                                    cpp/planning/BinarySameConstraint.h cpp/planning/BinarySameConstraint.cpp
                                    cpp/planning/NullConstraint.h cpp/planning/NullConstraint.cpp
                                    cpp/planning/OperatorOrConstraint.h cpp/planning/OperatorOrConstraint.cpp
-                                   cpp/planning/FrameConstraint.h cpp/planning/FrameConstraint.cpp
-                                   cpp/planning/OperatorAddConstraint.h cpp/planning/OperatorAddConstraint.cpp
-                                   cpp/planning/ValidVariablesConstraint.h cpp/planning/ValidVariablesConstraint.cpp)
+                                   cpp/planning/FrameConstraint.h cpp/planning/FrameConstraint.cpp)
 target_link_libraries(${PROJECT_NAME} gtsam)
 
 # ##############################################################################

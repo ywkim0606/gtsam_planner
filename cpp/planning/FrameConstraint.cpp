@@ -7,6 +7,7 @@
 
 #include <gtsam/base/Testable.h>
 #include <gtsam/discrete/DecisionTreeFactor.h>
+#include <gtsam/discrete/TableFactor.h>
 #include <cpp/planning/SingleValueConstraint.h>
 #include <cpp/planning/FrameConstraint.h>
 #include <cpp/planning/NullConstraint.h>
@@ -64,9 +65,21 @@ DecisionTreeFactor FrameConstraint::toDecisionTreeFactor() const {
 }
 
 /* ************************************************************************* */
+TableFactor FrameConstraint::toTableFactor() const {
+  DecisionTreeFactor dt = toDecisionTreeFactor();
+  return dt.toTableFactor();
+}
+
+/* ************************************************************************* */
 DecisionTreeFactor FrameConstraint::operator*(const DecisionTreeFactor& f) const {
   // TODO: can we do this more efficiently?
   return toDecisionTreeFactor() * f;
+}
+
+/* ************************************************************************* */
+TableFactor FrameConstraint::operator*(const TableFactor& f) const {
+  // TODO: can we do this more efficiently?
+  return toTableFactor() * f;
 }
 
 }  // namespace gtsam_planner

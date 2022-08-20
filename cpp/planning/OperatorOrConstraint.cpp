@@ -7,6 +7,7 @@
 
 #include <gtsam/base/Testable.h>
 #include <gtsam/discrete/DecisionTreeFactor.h>
+#include <gtsam/discrete/TableFactor.h>
 #include <cpp/planning/SingleValueConstraint.h>
 #include <cpp/planning/OperatorOrConstraint.h>
 #include <cpp/planning/MultiValueConstraint.h>
@@ -63,9 +64,20 @@ DecisionTreeFactor OperatorOrConstraint::toDecisionTreeFactor() const {
 }
 
 /* ************************************************************************* */
+TableFactor OperatorOrConstraint::toTableFactor() const {
+  DecisionTreeFactor dt = toDecisionTreeFactor();
+  return dt.toTableFactor();
+}
+
+/* ************************************************************************* */
 DecisionTreeFactor OperatorOrConstraint::operator*(const DecisionTreeFactor& f) const {
   // TODO: can we do this more efficiently?
   return toDecisionTreeFactor() * f;
+}
+
+/* ************************************************************************* */
+TableFactor OperatorOrConstraint::operator*(const TableFactor& f) const {
+  return toTableFactor() * f;
 }
 
 }  // namespace gtsam_planner

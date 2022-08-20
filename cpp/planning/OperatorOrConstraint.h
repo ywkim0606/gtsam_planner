@@ -63,10 +63,16 @@ class OperatorOrConstraint : public DiscreteFactor {
   /// Convert into a decisiontree
   DecisionTreeFactor toDecisionTreeFactor() const override;
 
-  /// Multiply into a decisiontree
-  DecisionTreeFactor operator*(const DecisionTreeFactor& f) const override;  
+  /// Convert into a TableFactor
+  TableFactor toTableFactor() const override;
 
-    /// Render as markdown table.
+  /// Multiply into a decisiontree
+  DecisionTreeFactor operator*(const DecisionTreeFactor& f) const override;
+
+  /// Multiply into a TableFactor
+  TableFactor operator*(const TableFactor& f) const override;   
+
+  /// Render as markdown table.
   std::string markdown(const KeyFormatter& keyFormatter = DefaultKeyFormatter,
                        const Names& names = {}) const override {
     return (boost::format("`Constraint` on %1% variables\n") % (size())).str();

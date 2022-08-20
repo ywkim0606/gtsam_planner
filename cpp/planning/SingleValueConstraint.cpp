@@ -7,6 +7,7 @@
 
 #include <gtsam/base/Testable.h>
 #include <gtsam/discrete/DecisionTreeFactor.h>
+#include <gtsam/discrete/TableFactor.h>
 #include <cpp/planning/SingleValueConstraint.h>
 
 #include <boost/make_shared.hpp>
@@ -14,8 +15,6 @@ using namespace gtsam;
 using namespace std;
 
 namespace gtsam_planner {
-
-
 
 /* ************************************************************************* */
 void SingleValueConstraint::print(const string& s, const KeyFormatter& formatter) const {
@@ -38,16 +37,27 @@ DecisionTreeFactor SingleValueConstraint::toDecisionTreeFactor() const {
   keys += DiscreteKey(keys_[0], cardinality_);
   vector<double> table;
   for (size_t i1 = 0; i1 < cardinality_; i1++) table.push_back(i1 == value_);
-  DecisionTreeFactor converted(keys, table);
-  return converted;
+  return DecisionTreeFactor(keys, table);
+}
+
+/* ************************************************************************* */
+TableFactor SingleValueConstraint::toTableFactor() const {
+  DiscreteKeys keys;
+  keys += DiscreteKey(keys_[0], cardinality_);
+  vector<double> table;
+  for (size_t i1 = 0; i1 < cardinality_; i1++) table.push_back(i1 == value_);
+  return TableFactor(keys, table);
 }
 
 /* ************************************************************************* */
 DecisionTreeFactor SingleValueConstraint::operator*(const DecisionTreeFactor& f) const {
-  // TODO: can we do this more efficiently?
   return toDecisionTreeFactor() * f;
 }
 
+/* ************************************************************************* */
+TableFactor SingleValueConstraint::operator*(const TableFactor& f) const {
+  return toTableFactor() * f;
+}
 
 /* ************************************************************************* */
 }  // namespace gtsam
