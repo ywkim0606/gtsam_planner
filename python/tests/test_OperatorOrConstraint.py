@@ -108,6 +108,65 @@ class TestMultiValueConstraint(GtsamTestCase):
         self.assertEqual(self.op_add(values), 0.0)
         self.assertEqual(self.op_add.toDecisionTreeFactor()(values), 0.0)
 
+    def test_operatorTrue0_Table(self):
+        """Checks if factor returns 1.0 when variables have tentative values"""
+        values = gtsam.DiscreteValues()
+        values[self.single_key[0]] = 0
+        values[self.keys0.at(0)[0]] = 0
+        values[self.keys0.at(1)[0]] = 1
+        values[self.keys0.at(2)[0]] = 2
+        self.assertEqual(self.op_add(values), 1.0)
+        self.assertEqual(self.op_add.toTableFactor()(values), 1.0)
+    
+    def test_operatorFalse0_Table(self):
+        """Checks if factor returns 0.0 when variables does not have tentative values"""
+        values = gtsam.DiscreteValues()
+        values[self.single_key[0]] = 0
+        values[self.keys0.at(0)[0]] = 0
+        values[self.keys0.at(1)[0]] = 0
+        values[self.keys0.at(2)[0]] = 2
+        self.assertEqual(self.op_add(values), 0.0)
+        self.assertEqual(self.op_add.toTableFactor()(values), 0.0)
+    
+    def test_operatorTrue1_Table(self):
+        """Checks if factor returns 1.0 when variables have tentative values"""
+        values = gtsam.DiscreteValues()
+        values[self.single_key[0]] = 1
+        values[self.keys1.at(0)[0]] = 0
+        values[self.keys1.at(1)[0]] = 2
+        values[self.keys1.at(2)[0]] = 0
+        self.assertEqual(self.op_add(values), 1.0)
+        self.assertEqual(self.op_add.toTableFactor()(values), 1.0)
+    
+    def test_operatorFalse1_Table(self):
+        """Checks if factor returns 0.0 when variables does not have tentative values"""
+        values = gtsam.DiscreteValues()
+        values[self.single_key[0]] = 1
+        values[self.keys1.at(0)[0]] = 0
+        values[self.keys1.at(1)[0]] = 1
+        values[self.keys1.at(2)[0]] = 0
+        self.assertEqual(self.op_add(values), 0.0)
+        self.assertEqual(self.op_add.toTableFactor()(values), 0.0)
+    
+    def test_operatorTrue2_Table(self):
+        """Checks if factor returns 1.0 when variables have tentative values"""
+        values = gtsam.DiscreteValues()
+        values[self.single_key[0]] = 2
+        values[self.keys2.at(0)[0]] = 2
+        values[self.keys2.at(1)[0]] = 1
+        values[self.keys2.at(2)[0]] = 1
+        self.assertEqual(self.op_add(values), 1.0)
+        self.assertEqual(self.op_add.toTableFactor()(values), 1.0)
+    
+    def test_operatorFalse2_Table(self):
+        """Checks if factor returns 0.0 when variables does not have tentative values"""
+        values = gtsam.DiscreteValues()
+        values[self.single_key[0]] = 2
+        values[self.keys2.at(1)[0]] = 1
+        values[self.keys2.at(2)[0]] = 0
+        self.assertEqual(self.op_add(values), 0.0)
+        self.assertEqual(self.op_add.toTableFactor()(values), 0.0)
+
 
 if __name__ == "__main__":
     unittest.main()

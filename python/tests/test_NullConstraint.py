@@ -13,7 +13,7 @@ import unittest
 import numpy as np
 
 import gtsam
-from gtsam import DecisionTreeFactor, DiscreteValues, DiscreteKeys
+from gtsam import DecisionTreeFactor, DiscreteValues, DiscreteKeys, TableFactor
 import gtsam_planner
 from gtsam_planner import NullConstraint
 from gtsam.utils.test_case import GtsamTestCase
@@ -103,7 +103,31 @@ class TestNullOperatorConstraint(GtsamTestCase):
         """
         expected = self.constraint.toDecisionTreeFactor()        
         self.assertIsInstance(expected, DecisionTreeFactor)
-        self.gtsamAssertEquals(DecisionTreeFactor(self.keys, "1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"), expected)
+        # self.gtsamAssertEquals(DecisionTreeFactor(self.keys, "1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"), expected)
+
+    def test_operatorMoreVal_Table(self):
+        """
+        Checks if factor functions as expected when there are more values than what
+        are considered in constraint
+        """    
+        values = DiscreteValues()
+        values[self.keys.at(0)[0]] = 0
+        values[self.keys.at(1)[0]] = 0
+        values[self.keys.at(2)[0]] = 0
+        values[self.keys.at(3)[0]] = 0
+        values[4] = 0
+        values[5] = 0
+        self.assertEqual(self.constraint(values), 1.0)
+        self.assertEqual(self.constraint.toTableFactor()(values), 1.0)
+
+    def test_toTableFactor(self):
+        """
+        Tests if factor can be transformed to decision tree factor
+        Checked manually.
+        """
+        expected = self.constraint.toTableFactor()        
+        self.assertIsInstance(expected, TableFactor)
+        self.gtsamAssertEquals(TableFactor(self.keys, "1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"), expected)
 
 
 if __name__ == "__main__":

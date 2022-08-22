@@ -13,7 +13,7 @@ import unittest
 import numpy as np
 
 import gtsam
-from gtsam import DecisionTreeFactor, DiscreteValues, DiscreteKeys
+from gtsam import DecisionTreeFactor, DiscreteValues, DiscreteKeys, TableFactor
 import gtsam_planner
 from gtsam_planner import FrameConstraint, NullConstraint
 from gtsam.utils.test_case import GtsamTestCase
@@ -90,6 +90,50 @@ class TestFrameConstraint(GtsamTestCase):
         values[self.keys1.at(3)[0]] = 1
         self.assertEqual(self.frame(values), 0.0)
         self.assertEqual(self.frame.toDecisionTreeFactor()(values), 0.0)
+
+    def test_operatorTrue0_Table(self):
+        """Checks if factor returns 1.0 when variables have tentative values"""
+        values = gtsam.DiscreteValues()
+        values[self.single_key[0]] = 0
+        values[self.keys0.at(0)[0]] = 0
+        values[self.keys0.at(1)[0]] = 1
+        values[self.keys0.at(2)[0]] = 0
+        values[self.keys0.at(3)[0]] = 1
+        self.assertEqual(self.frame(values), 1.0)
+        self.assertEqual(self.frame.toTableFactor()(values), 1.0)
+    
+    def test_operatorFalse0_Table(self):
+        """Checks if factor returns 0.0 when variables does not have tentative values"""
+        values = gtsam.DiscreteValues()
+        values[self.single_key[0]] = 0
+        values[self.keys0.at(0)[0]] = 0
+        values[self.keys0.at(1)[0]] = 1
+        values[self.keys0.at(2)[0]] = 1
+        values[self.keys0.at(3)[0]] = 1
+        self.assertEqual(self.frame(values), 0.0)
+        self.assertEqual(self.frame.toTableFactor()(values), 0.0)
+    
+    def test_operatorTrue1_Table(self):
+        """Checks if factor returns 1.0 when variables have tentative values"""
+        values = gtsam.DiscreteValues()
+        values[self.single_key[0]] = 1
+        values[self.keys1.at(0)[0]] = 1
+        values[self.keys1.at(1)[0]] = 0
+        values[self.keys1.at(2)[0]] = 1
+        values[self.keys1.at(3)[0]] = 0
+        self.assertEqual(self.frame(values), 1.0)
+        self.assertEqual(self.frame.toTableFactor()(values), 1.0)
+    
+    def test_operatorFalse1_Table(self):
+        """Checks if factor returns 0.0 when variables does not have tentative values"""
+        values = gtsam.DiscreteValues()
+        values[self.single_key[0]] = 1
+        values[self.keys1.at(0)[0]] = 1
+        values[self.keys1.at(1)[0]] = 0
+        values[self.keys1.at(2)[0]] = 1
+        values[self.keys1.at(3)[0]] = 1
+        self.assertEqual(self.frame(values), 0.0)
+        self.assertEqual(self.frame.toTableFactor()(values), 0.0)
 
 
 if __name__ == "__main__":

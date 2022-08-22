@@ -13,7 +13,7 @@ import unittest
 import numpy as np
 
 import gtsam
-from gtsam import DecisionTreeFactor, DiscreteValues, DiscreteKeys
+from gtsam import DecisionTreeFactor, DiscreteValues, DiscreteKeys, TableFactor
 import gtsam_planner
 from gtsam_planner import OrConstraint
 from gtsam.utils.test_case import GtsamTestCase
@@ -51,7 +51,15 @@ class TestOrConstraint(GtsamTestCase):
         """
         expected = self.constraint.toDecisionTreeFactor()
         self.assertIsInstance(expected, DecisionTreeFactor)
-        self.gtsamAssertEquals(DecisionTreeFactor(self.keys, "0 0 1 1 1 1 1 1"), expected)
+        # self.gtsamAssertEquals(DecisionTreeFactor(self.keys, "0 0 1 1 1 1 1 1"), expected)
+
+    def test_toTableFactor(self):
+        """
+        Check conversion to decision tree factor, checked manually
+        """
+        expected = self.constraint.toTableFactor()
+        self.assertIsInstance(expected, TableFactor)
+        self.gtsamAssertEquals(TableFactor(self.keys, "0 0 1 1 1 1 1 1"), expected)
 
 
 if __name__ == "__main__":

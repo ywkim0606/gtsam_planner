@@ -34,7 +34,7 @@ class SASToGTSAM():
             state.append(state_var)
         return state
     
-    def generate_operator_key(self, timestep: int) -> gtsam.DiscreteKey:
+    def generate_operator_key(self, timestep: int):
         op_var = self.variables.discrete("op_"+str(timestep), self.ops_names)
         return op_var
     

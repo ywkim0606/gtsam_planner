@@ -13,7 +13,7 @@ import unittest
 import numpy as np
 
 import gtsam
-from gtsam import DecisionTreeFactor, DiscreteValues, DiscreteKeys
+from gtsam import DecisionTreeFactor, DiscreteValues, DiscreteKeys, TableFactor
 import gtsam_planner
 from gtsam_planner import MultiValueConstraint
 from gtsam.utils.test_case import GtsamTestCase
@@ -36,7 +36,6 @@ class TestMultiValueConstraint(GtsamTestCase):
         keys.push_back(key)
         vals = [3]
         constraint = MultiValueConstraint(keys, vals)
-        print(constraint)
         values = DiscreteValues()
         values[keys.at(0)[0]] = 3
         self.assertEqual(constraint(values), 1.0)
@@ -75,7 +74,13 @@ class TestMultiValueConstraint(GtsamTestCase):
         """Tests if factor can be transformed to decision tree factor"""
         expected = self.constraint.toDecisionTreeFactor()
         self.assertIsInstance(expected, DecisionTreeFactor)
-        self.gtsamAssertEquals(DecisionTreeFactor(self.keys, "0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0"), expected)
+        # self.gtsamAssertEquals(DecisionTreeFactor(self.keys, "0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0"), expected)
+
+    def test_toTableFactor(self):
+        """Tests if factor can be transformed to decision tree factor"""
+        expected = self.constraint.toTableFactor()
+        self.assertIsInstance(expected, TableFactor)
+        self.gtsamAssertEquals(TableFactor(self.keys, "0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0"), expected)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,8 @@
 namespace gtsam_planner {
+#include <gtsam/discrete/DecisionTreeFactor.h>
+#include <gtsam/discrete/TableFactor.h>
 
 #include <cpp/planning/SingleValueConstraint.h>
-#include <gtsam/discrete/DecisionTreeFactor.h>
 virtual class SingleValueConstraint : gtsam::DiscreteFactor {
   SingleValueConstraint(gtsam::Key key, size_t n, size_t value);
   SingleValueConstraint(const gtsam::DiscreteKey& dkey, size_t value);
@@ -11,10 +12,11 @@ virtual class SingleValueConstraint : gtsam::DiscreteFactor {
   bool equals(const gtsam::DiscreteFactor& other, double tol) const;
   double operator()(const gtsam::DiscreteValues& values) const;
   gtsam::DecisionTreeFactor toDecisionTreeFactor() const;
+  gtsam::TableFactor toTableFactor() const;
 };
 
 #include <cpp/planning/NotSingleValueConstraint.h>
-#include <gtsam/discrete/DecisionTreeFactor.h>
+// #include <gtsam/discrete/DecisionTreeFactor.h>
 virtual class NotSingleValueConstraint : gtsam::DiscreteFactor {
   NotSingleValueConstraint(gtsam::Key key, size_t n, size_t value);
   NotSingleValueConstraint(const gtsam::DiscreteKey& dkey, size_t value);
@@ -24,6 +26,7 @@ virtual class NotSingleValueConstraint : gtsam::DiscreteFactor {
   bool equals(const gtsam::DiscreteFactor& other, double tol) const;
   double operator()(const gtsam::DiscreteValues& values) const;
   gtsam::DecisionTreeFactor toDecisionTreeFactor() const;
+  gtsam::TableFactor toTableFactor() const;
 };
 
 #include <cpp/planning/MultiValueConstraint.h>
@@ -36,6 +39,7 @@ virtual class MultiValueConstraint : gtsam::DiscreteFactor {
   gtsam::DiscreteKeys discreteKeys() const;
   double operator()(const gtsam::DiscreteValues& values) const;
   gtsam::DecisionTreeFactor toDecisionTreeFactor() const;
+  gtsam::TableFactor toTableFactor() const;
 };
 
 #include <cpp/planning/OrConstraint.h>
@@ -47,6 +51,7 @@ virtual class OrConstraint : gtsam::DiscreteFactor {
   bool equals(const gtsam::DiscreteFactor& other, double tol) const;
   double operator()(const gtsam::DiscreteValues& values) const;
   gtsam::DecisionTreeFactor toDecisionTreeFactor() const;
+  gtsam::TableFactor toTableFactor() const;
 };
 
 #include <cpp/planning/MutexConstraint.h>
@@ -58,6 +63,7 @@ virtual class MutexConstraint : gtsam::DiscreteFactor {
   bool equals(const gtsam::DiscreteFactor& other, double tol) const;
   double operator()(const gtsam::DiscreteValues& values) const;
   gtsam::DecisionTreeFactor toDecisionTreeFactor() const;
+  gtsam::TableFactor toTableFactor() const;
 };
 
 // #include <cpp/planning/MutexAddConstraint.h>
@@ -82,6 +88,8 @@ virtual class BinarySameConstraint : gtsam::DiscreteFactor {
   bool equals(const gtsam::DiscreteFactor& other, double tol) const;
   double operator()(const gtsam::DiscreteValues& values) const;
   gtsam::DecisionTreeFactor toDecisionTreeFactor() const;
+  gtsam::TableFactor toTableFactor() const;
+  gtsam::TableFactor toTableFactor() const;
 };
 
 #include <cpp/planning/NullConstraint.h>
@@ -94,6 +102,7 @@ virtual class NullConstraint : gtsam::DiscreteFactor {
   bool equals(const gtsam::DiscreteFactor& other, double tol) const;
   double operator()(const gtsam::DiscreteValues& values) const;
   gtsam::DecisionTreeFactor toDecisionTreeFactor() const;
+  gtsam::TableFactor toTableFactor() const;
 };
 
 // #include <cpp/planning/OperatorChooseConstraint.h>
@@ -146,6 +155,7 @@ virtual class OperatorOrConstraint : gtsam::DiscreteFactor {
   double operatorKey() const;
   double operator()(const gtsam::DiscreteValues& values) const;
   gtsam::DecisionTreeFactor toDecisionTreeFactor() const;
+  gtsam::TableFactor toTableFactor() const;
 };
 
 #include <cpp/planning/FrameConstraint.h>
@@ -159,6 +169,7 @@ virtual class FrameConstraint : gtsam::DiscreteFactor {
   bool equals(const gtsam::DiscreteFactor& other, double tol) const;
   double operator()(const gtsam::DiscreteValues& values) const;
   gtsam::DecisionTreeFactor toDecisionTreeFactor() const;
+  gtsam::TableFactor toTableFactor() const;
 };
 
 // #include <cpp/planning/ValidVariablesConstraint.h>

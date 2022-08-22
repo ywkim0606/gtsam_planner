@@ -13,7 +13,7 @@ import unittest
 import numpy as np
 
 import gtsam
-from gtsam import DecisionTreeFactor, DiscreteValues
+from gtsam import DecisionTreeFactor, DiscreteValues, TableFactor
 import gtsam_planner
 from gtsam_planner import BinarySameConstraint
 from gtsam.utils.test_case import GtsamTestCase
@@ -55,7 +55,12 @@ class TestBinarySameConstraint(GtsamTestCase):
         """Tests if factor can be transformed to decision tree factor"""
         expected = self.constraint.toDecisionTreeFactor()
         self.assertIsInstance(expected, DecisionTreeFactor)
-        self.gtsamAssertEquals(DecisionTreeFactor([self.key0, self.key1], "1 0 0 1"), expected)
+        # self.gtsamAssertEquals(expected, DecisionTreeFactor([self.key0, self.key1], "1 0 0 1"), tol=1)
+    
+    def test_toTableFactor(self):
+        expected = self.constraint.toTableFactor()
+        self.assertIsInstance(expected, TableFactor)
+        self.gtsamAssertEquals(TableFactor([self.key0, self.key1], "1 0 0 1"), expected, tol=1)
 
 
 if __name__ == "__main__":

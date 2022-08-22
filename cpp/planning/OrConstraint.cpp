@@ -22,6 +22,7 @@ OrConstraint::OrConstraint(const vector<DecisionTreeFactor>& factors)
   set<DiscreteKey> dkeys_set;
   for (DecisionTreeFactor factor : factors) {
     dt_factors_.push_back(factor);
+    table_factors_.push_back(factor.toTableFactor());
     DiscreteKeys dkeys = factor.discreteKeys();
     for (DiscreteKey dkey : dkeys) dkeys_set.insert(dkey);
   }
@@ -36,6 +37,7 @@ OrConstraint::OrConstraint(const vector<TableFactor>& factors)
   set<DiscreteKey> dkeys_set;
   for (TableFactor factor : factors) {
     table_factors_.push_back(factor);
+    dt_factors_.push_back(factor.toDecisionTreeFactor());
     DiscreteKeys dkeys = factor.discreteKeys();
     for (DiscreteKey dkey : dkeys) dkeys_set.insert(dkey);
   }

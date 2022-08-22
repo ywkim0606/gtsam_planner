@@ -13,7 +13,7 @@ import unittest
 import numpy as np
 
 import gtsam
-from gtsam import DecisionTreeFactor, DiscreteValues
+from gtsam import DecisionTreeFactor, DiscreteValues, TableFactor
 import gtsam_planner
 from gtsam_planner import NotSingleValueConstraint
 from gtsam.utils.test_case import GtsamTestCase
@@ -43,7 +43,13 @@ class TestNotSingleValueConstraint(GtsamTestCase):
         """Tests if factor can be transformed to decision tree factor"""
         expected = self.constraint.toDecisionTreeFactor()
         self.assertIsInstance(expected, DecisionTreeFactor)
-        self.gtsamAssertEquals(DecisionTreeFactor(self.key, "1 1 1 0"), expected)
+        # self.gtsamAssertEquals(DecisionTreeFactor(self.key, "1 1 1 0"), expected)
+
+    def test_toTableFactor(self):
+        """Tests if factor can be transformed to decision tree factor"""
+        expected = self.constraint.toTableFactor()
+        self.assertIsInstance(expected, TableFactor)
+        self.gtsamAssertEquals(TableFactor(self.key, "1 1 1 0"), expected)
 
 
 if __name__ == "__main__":
